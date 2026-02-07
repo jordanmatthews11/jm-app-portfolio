@@ -1,0 +1,72 @@
+import { useState, useRef, useEffect } from 'react'
+
+export default function ShareAppMenu({ url, title }) {
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [open])
+
+  async function handleCopy(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (_) {}
+    setOpen(false)
+  }
+
+  function handleText(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    window.open(`sms:?body=${encodeURIComponent(url)}`, '_blank')
+    setOpen(false)
+  }
+
+  function handleEmail(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    window.location.href = `mailto:?subject=${encodeURIComponent(title || 'App link')}&body=${encodeURIComponent(url)}`
+    setOpen(false)
+  }
+
+  return (
+    <div className="share-app-menu" ref={menuRef} onClick={(e) => e.stopPropagation()}>
+      <button
+        type="button"
+        className="card-share-trigger"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setOpen((o) => !o)
+        }}
+        aria-expanded={open}
+        aria-label="Share app link"
+      >
+        Share
+      </button>
+      {open && (
+        <div className="share-app-dropdown">
+          <button type="button" className="share-option" onClick={handleCopy}>
+            {copied ? 'Copied!' : 'Copy link'}
+          </button>
+          <button type="button" className="share-option" onClick={handleText}>
+            Text link
+          </button>
+          <button type="button" className="share-option" onClick={handleEmail}>
+            Email link
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
