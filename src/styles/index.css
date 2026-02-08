@@ -1,15 +1,19 @@
-/* Fun, distinctive base */
+/* Earth tones, watercolor, industrial-inspired */
 :root {
-  --bg: #0f0f12;
-  --surface: #1a1a20;
-  --text: #e8e6e3;
-  --text-muted: #9b9893;
-  --accent: #7c5cff;
-  --accent-hover: #9b82ff;
-  --border: #2a2a32;
+  --bg: #1a1612;
+  --bg-warm: #252019;
+  --surface: #2c2620;
+  --surface-alt: #3d352c;
+  --text: #e8e4df;
+  --text-muted: #c4beb5;
+  --accent: #c17f59;
+  --accent-hover: #d4936e;
+  --border: #3d352c;
+  --border-alt: #4a4238;
   --radius: 12px;
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Instrument Serif', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
+  --accent-rgb: 193, 127, 89;
 }
 
 *,
@@ -28,17 +32,64 @@ body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Google Fonts – load in index.html or here via @import */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@500;600;700&display=swap');
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
 
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+/* Watercolor-style background with movement */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--bg);
+  background-image:
+    linear-gradient(rgba(61, 53, 44, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 53, 44, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  overflow: hidden;
+}
+
+.bg-layer::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(193, 127, 89, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 80% 70%, rgba(184, 134, 11, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 80% at 50% 50%, rgba(61, 53, 44, 0.4) 0%, transparent 60%);
+  animation: bgDrift 30s ease-in-out infinite;
+}
+
+.bg-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(26, 22, 18, 0.3) 100%);
+  animation: bgDriftAlt 25s ease-in-out infinite;
+}
+
+@keyframes bgDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, 1%) scale(1.02); }
+  66% { transform: translate(-1%, 2%) scale(0.98); }
+}
+
+@keyframes bgDriftAlt {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 /* Nav */
@@ -47,11 +98,12 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: var(--surface);
+  background: rgba(44, 38, 32, 0.94);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 10;
+  backdrop-filter: blur(8px);
 }
 
 .nav-logo {
@@ -94,7 +146,7 @@ body {
 
 .nav-link.active {
   color: var(--accent);
-  background: rgba(124, 92, 255, 0.12);
+  background: rgba(var(--accent-rgb), 0.15);
 }
 
 /* Main content */
@@ -206,7 +258,7 @@ body {
 
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 6px 20px rgba(124, 92, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .btn-secondary {
@@ -239,7 +291,7 @@ body {
 .card-wrapper:hover {
   border-color: var(--accent);
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 24px rgba(var(--accent-rgb), 0.2);
 }
 
 .card {
@@ -324,9 +376,8 @@ body {
 }
 
 .card-share-trigger:hover {
-  color: var(--text);
-  background: var(--accent);
   color: #fff;
+  background: var(--accent);
 }
 
 .share-app-dropdown {
@@ -375,6 +426,16 @@ body {
   justify-content: center;
   background: var(--bg);
   color: var(--text-muted);
+  position: relative;
+}
+
+.auth-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 40%, rgba(var(--accent-rgb), 0.12) 0%, transparent 50%);
 }
 
 .auth-loading.auth-denied {
@@ -421,6 +482,17 @@ body {
   justify-content: center;
   background: var(--bg);
   padding: 1.5rem;
+  position: relative;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 50%, rgba(var(--accent-rgb), 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 70% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 50%);
 }
 
 .login-card {
@@ -447,16 +519,16 @@ body {
 }
 
 .btn-google {
-  background: #fff;
-  color: #1a1a1a;
-  border: 1px solid var(--border);
+  background: var(--text);
+  color: var(--bg);
+  border: 1px solid var(--border-alt);
   cursor: pointer;
   font-family: var(--font-body);
 }
 
 .btn-google:hover {
-  background: #f5f5f5;
-  border-color: var(--text-muted);
+  background: var(--text-muted);
+  border-color: var(--border-alt);
 }
 
 /* Button sizes and danger */
