@@ -92,6 +92,52 @@ body {
   50% { opacity: 1; }
 }
 
+/* Scroll-driven abstract art (home only) */
+.scroll-art {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scroll-art__layer {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.scroll-art__layer--1 {
+  background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(193, 127, 89, 0.2) 0%, transparent 55%);
+  transform: rotate(calc(var(--scroll-p, 0) * 180deg)) translate(calc(var(--scroll-p, 0) * 12%), calc(var(--scroll-p, 0) * -6%));
+}
+
+.scroll-art__layer--2 {
+  background: radial-gradient(ellipse 60% 80% at 80% 60%, rgba(184, 134, 11, 0.18) 0%, transparent 50%);
+  transform: rotate(calc(var(--scroll-p, 0) * -120deg)) translate(calc(var(--scroll-p-2, 0) * -10%), calc(var(--scroll-p-2, 0) * 8%));
+}
+
+.scroll-art__layer--3 {
+  background: radial-gradient(ellipse 80% 50% at 20% 80%, rgba(139, 119, 101, 0.15) 0%, transparent 55%);
+  transform: rotate(calc(var(--scroll-p-2, 0) * 200deg)) translate(calc(var(--scroll-p, 0) * 8%), calc(var(--scroll-p, 0) * 10%));
+}
+
+.scroll-art__layer--4 {
+  background: radial-gradient(ellipse 65% 70% at 60% 20%, rgba(61, 53, 44, 0.25) 0%, transparent 60%);
+  transform: rotate(calc(var(--scroll-p, 0) * 90deg)) translate(calc(var(--scroll-p-3, 0) * -15%), calc(var(--scroll-p-3, 0) * -5%));
+}
+
+.scroll-art__layer--5 {
+  background: radial-gradient(ellipse 55% 75% at 30% 50%, rgba(193, 127, 89, 0.12) 0%, transparent 50%);
+  transform: rotate(calc(var(--scroll-p-2, 0) * -160deg)) translate(calc(var(--scroll-p-2, 0) * 6%), calc(var(--scroll-p-2, 0) * -12%));
+}
+
+.scroll-art__layer--6 {
+  background: radial-gradient(ellipse 75% 55% at 70% 85%, rgba(184, 134, 11, 0.1) 0%, transparent 55%);
+  transform: rotate(calc(var(--scroll-p-3, 0) * 140deg)) translate(calc(var(--scroll-p-3, 0) * -8%), calc(var(--scroll-p-3, 0) * 6%));
+}
+
 /* Nav */
 .nav {
   display: flex;
@@ -193,11 +239,28 @@ body {
 }
 
 /* Home page */
-.home-page .hero {
-  margin-bottom: 2.5rem;
+.home-page {
+  position: relative;
 }
 
-.home-page .hero h1 {
+.home-scroll-content {
+  position: relative;
+  z-index: 1;
+}
+
+.home-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.home-section--middle {
+  min-height: 80vh;
+}
+
+.home-section--hero h1 {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(2.25rem, 6vw, 3.25rem);
@@ -211,13 +274,8 @@ body {
   color: var(--text-muted);
 }
 
-.home-page .bio,
-.home-page .cta {
-  margin-bottom: 2rem;
-}
-
-.home-page .bio h2,
-.home-page .cta h2 {
+.home-section--about h2,
+.home-section--cta h2 {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.25rem;
@@ -225,10 +283,18 @@ body {
   color: var(--text);
 }
 
-.home-page .bio p {
+.home-section--about p {
   margin: 0;
   color: var(--text-muted);
   max-width: 560px;
+}
+
+.home-vibes {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .cta-links {
