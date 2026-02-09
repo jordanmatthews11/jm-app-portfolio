@@ -1,11 +1,13 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
-import HomePage from './pages/HomePage'
 import PortfolioPage from './pages/PortfolioPage'
 import ToolsPage from './pages/ToolsPage'
 import AdminPage from './pages/AdminPage'
+
+const HomePage = lazy(() => import('./pages/HomePage'))
 
 function AppContent() {
   const { user, loading, signOut, isAllowed, firebaseError } = useAuth()
@@ -46,15 +48,17 @@ function AppContent() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="portfolio" element={<PortfolioPage />} />
-        <Route path="tools" element={<ToolsPage />} />
-        <Route path="admin" element={<AdminPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={<div className="auth-loading"><span>Loading…</span></div>}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="portfolio" element={<PortfolioPage />} />
+          <Route path="tools" element={<ToolsPage />} />
+          <Route path="admin" element={<AdminPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </Suspense>
   )
 }
 
