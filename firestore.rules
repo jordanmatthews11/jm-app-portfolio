@@ -9,6 +9,11 @@ service cloud.firestore {
     match /homeContent/{docId} {
       allow read, write: if request.auth != null;
     }
+    // Shortlinks: public read (for redirects), write only when signed in
+    match /redirects/{slug} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
     // Everything else: deny
     match /{document=**} {
       allow read, write: if false;

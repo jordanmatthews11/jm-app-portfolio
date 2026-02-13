@@ -1,8 +1,145 @@
 import { useState, useEffect } from 'react'
 import { usePortfolio } from '../hooks/usePortfolio'
 import { useHomeContent } from '../hooks/useHomeContent'
+import { useRedirects, RESERVED_SLUGS } from '../hooks/useRedirects'
 
 const LOADING_SLOW_MS = 8000
+
+function ShortlinksTab({ items, loading, error, addRedirect, updateRedirect, removeRedirect }) {
+  const [slug, setSlug] = useState('')
+  const [url, setUrl] = useState('')
+  const [editingSlug, setEditingSlug] = useState(null)
+  const [editUrl, setEditUrl] = useState('')
+
+  function normalizeSlug(s) {
+    return s.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-_]/g, '')
+  }
+
+  function isValidUrl(u) {
+    const trimmed = (u || '').trim()
+    return trimmed.startsWith('http://') || trimmed.startsWith('https://')
+  }
+
+  function clearForm() {
+    setSlug('')
+    setUrl('')
+    setEditingSlug(null)
+    setEditUrl('')
+  }
+
+  async function handleAdd(e) {
+    e.preventDefault()
+    const normalized = normalizeSlug(slug)
+    if (!normalized) return
+    if (RESERVED_SLUGS.includes(normalized.toLowerCase())) {
+      alert(`"${normalized}" is reserved. Use a different slug.`)
+      return
+    }
+    if (!isValidUrl(url)) {
+      alert('URL must start with http:// or https://')
+      return
+    }
+    await addRedirect(normalized, url.trim())
+    clearForm()
+  }
+
+  function startEdit(item) {
+    setEditingSlug(item.slug)
+    setEditUrl(item.url || '')
+  }
+
+  async function saveEdit(e) {
+    e.preventDefault()
+    if (!editingSlug || !isValidUrl(editUrl)) return
+    await updateRedirect(editingSlug, editUrl.trim())
+    clearForm()
+  }
+
+  async function handleDelete(slugToRemove) {
+    if (window.confirm(`Remove shortlink /${slugToRemove}?`)) {
+      await removeRedirect(slugToRemove)
+    }
+  }
+
+  const shortlinkBase = typeof window !== 'undefined' ? window.location.origin : 'jordan-matthews.com'
+
+  return (
+    <>
+      <section className="admin-home-section">
+        <h2 className="admin-section-title">Shortlinks</h2>
+        <p className="admin-empty" style={{ marginBottom: '1rem' }}>
+          Add a slug and destination URL. Visitors to <strong>{shortlinkBase}/YourSlug</strong> will be redirected to the URL.
+        </p>
+        <form className="admin-form" onSubmit={editingSlug ? saveEdit : handleAdd}>
+          <label>
+            Slug <span className="required">*</span>
+            <span className="hint"> One word or phrase, no spaces (e.g. Dog, my-app)</span>
+            <input
+              type="text"
+              value={editingSlug ? editingSlug : slug}
+              onChange={(e) => (editingSlug ? null : setSlug(e.target.value))}
+              placeholder="Dog"
+              required
+              readOnly={!!editingSlug}
+            />
+          </label>
+          <label>
+            Destination URL <span className="required">*</span>
+            <input
+              type="url"
+              value={editingSlug ? editUrl : url}
+              onChange={(e) => (editingSlug ? setEditUrl(e.target.value) : setUrl(e.target.value))}
+              placeholder="https://..."
+              required
+            />
+          </label>
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary">
+              {editingSlug ? 'Save' : 'Add shortlink'}
+            </button>
+            {editingSlug && (
+              <button type="button" className="btn btn-secondary" onClick={clearForm}>
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+        <div className="admin-list">
+          <h3 className="admin-list-title">Current shortlinks</h3>
+          {items.length === 0 ? (
+            <p className="admin-empty">No shortlinks yet.</p>
+          ) : (
+            <ul className="admin-items">
+              {items.map((item) => (
+                <li key={item.slug} className="admin-item">
+                  {editingSlug === item.slug ? null : (
+                    <>
+                      <div className="admin-item-info">
+                        <strong>/{item.slug}</strong>
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="admin-item-url">
+                          {item.url}
+                        </a>
+                        <span className="admin-item-meta">{shortlinkBase}/{item.slug}</span>
+                      </div>
+                      <div className="admin-item-actions">
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(item)}>
+                          Edit
+                        </button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(item.slug)}>
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    </>
+  )
+}
 
 function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }) {
   const [title, setTitle] = useState('')
@@ -737,11 +874,12 @@ function HomeContentTab({
 export default function AdminPage() {
   const { items: portfolioItems, loading: portfolioLoading, error: portfolioError, addItem, updateItem, removeItem } = usePortfolio()
   const { content, loading: homeLoading, error: homeError, updateContent, addUpdate, updateUpdate, removeUpdate, addBlogPost, updateBlogPost, removeBlogPost, addRecentProject, updateRecentProject, removeRecentProject } = useHomeContent()
+  const { items: redirectItems, loading: redirectsLoading, error: redirectsError, addRedirect, updateRedirect, removeRedirect } = useRedirects()
   const [activeTab, setActiveTab] = useState('portfolio')
   const [loadingSlow, setLoadingSlow] = useState(false)
 
-  const loading = portfolioLoading || homeLoading
-  const error = portfolioError || homeError
+  const loading = portfolioLoading || homeLoading || redirectsLoading
+  const error = portfolioError || homeError || redirectsError
 
   useEffect(() => {
     if (!loading) {
@@ -796,6 +934,13 @@ export default function AdminPage() {
         >
           Home Content
         </button>
+        <button
+          type="button"
+          className={`admin-tab ${activeTab === 'shortlinks' ? 'active' : ''}`}
+          onClick={() => setActiveTab('shortlinks')}
+        >
+          Shortlinks
+        </button>
       </div>
 
       {activeTab === 'portfolio' && (
@@ -823,6 +968,17 @@ export default function AdminPage() {
           updateRecentProject={updateRecentProject}
           removeRecentProject={removeRecentProject}
           portfolioItems={portfolioItems}
+        />
+      )}
+
+      {activeTab === 'shortlinks' && (
+        <ShortlinksTab
+          items={redirectItems}
+          loading={redirectsLoading}
+          error={redirectsError}
+          addRedirect={addRedirect}
+          updateRedirect={updateRedirect}
+          removeRedirect={removeRedirect}
         />
       )}
     </div>

@@ -1,11 +1,12 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
 import PortfolioPage from './pages/PortfolioPage'
-import ToolsPage from './pages/ToolsPage'
 import AdminPage from './pages/AdminPage'
+import RedirectResolver from './pages/RedirectResolver'
+import { RESERVED_SLUGS } from './hooks/useRedirects'
 
 const HomePage = lazy(() => import('./pages/HomePage'))
 
@@ -53,7 +54,6 @@ function AppContent() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
-          <Route path="tools" element={<ToolsPage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
@@ -62,12 +62,30 @@ function AppContent() {
   )
 }
 
-export default function App() {
+function AppRouter() {
+  const location = useLocation()
+  const pathname = location.pathname
+  const segments = pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
+  const isOneSegment = segments.length === 1
+  const slug = segments[0]
+  const isReserved = RESERVED_SLUGS.includes(slug)
+  const isShortlinkPath = isOneSegment && !isReserved
+
+  if (isShortlinkPath) {
+    return <RedirectResolver slug={slug} />
+  }
+
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <AppContent />
     </AuthProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
   )
 }

@@ -23,6 +23,8 @@ function useScrollProgress(containerRef) {
       lastPRef.current = pRounded
       el.style.setProperty('--scroll-p', String(p))
       el.style.setProperty('--scroll-p-2', String(p * 0.7 + 0.15))
+      el.style.setProperty('--scroll-p-3', String(p * 0.4 + 0.3))
+      el.style.setProperty('--scroll-p-4', String(p * 0.85 + 0.08))
     }
 
     function scheduleUpdate() {
@@ -64,6 +66,14 @@ export default function ScrollArt() {
       <div className="scroll-art__layer scroll-art__layer--2" />
       <div className="scroll-art__layer scroll-art__layer--3" />
       <div className="scroll-art__layer scroll-art__layer--4" />
+      <div className="scroll-art__layer scroll-art__layer--5" />
+      <div className="scroll-art__layer scroll-art__layer--6" />
+      <div className="scroll-art__layer scroll-art__layer--7" />
+      <div className="scroll-art__layer scroll-art__layer--8" />
+      <div className="scroll-art__layer scroll-art__layer--9" />
+      <div className="scroll-art__layer scroll-art__layer--10" />
+      <div className="scroll-art__layer scroll-art__layer--11" />
+      <div className="scroll-art__layer scroll-art__layer--12" />
     </div>
   )
 }
