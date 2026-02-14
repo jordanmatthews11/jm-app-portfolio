@@ -29,6 +29,16 @@ export default function PortfolioPage() {
           ))}
         </div>
       )}
+
+      <section className="tools-section">
+        <header className="page-header">
+          <h2>Tools</h2>
+          <p className="page-subtitle">Handy stuff—coming soon.</p>
+        </header>
+        <p className="placeholder-message">
+          Drop your tools here when you're ready.
+        </p>
+      </section>
     </div>
   )
 }

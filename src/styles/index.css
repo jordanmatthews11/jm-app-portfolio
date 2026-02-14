@@ -14,19 +14,13 @@
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
   --accent-rgb: 212, 132, 90;
-  /* Nature layer palette */
+  /* Background layer palette */
   --layer-amber-rgb: 232, 184, 75;
   --layer-coral-rgb: 232, 150, 122;
   --layer-sky-rgb: 124, 184, 212;
   --layer-sage-rgb: 139, 191, 138;
   --layer-lavender-rgb: 184, 166, 212;
   --layer-peach-rgb: 240, 196, 160;
-  --layer-turquoise-rgb: 107, 196, 184;
-  --layer-rose-rgb: 212, 160, 138;
-  --layer-gold-rgb: 218, 195, 120;
-  --layer-seafoam-rgb: 145, 210, 195;
-  --layer-terracotta-rgb: 200, 130, 95;
-  --layer-blush-rgb: 225, 180, 175;
 }
 
 *,
@@ -104,33 +98,6 @@ body {
   50% { opacity: 1; }
 }
 
-/* Ambient drift animations for scroll-art layers */
-@keyframes layerFloat1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(2%, -1.5%) scale(1.02); }
-  50% { transform: translate(-1%, 2%) scale(0.99); }
-  75% { transform: translate(1.5%, 1%) scale(1.01); }
-}
-
-@keyframes layerFloat2 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(-1.5%, 2%) rotate(3deg); }
-  66% { transform: translate(2%, -1%) rotate(-2deg); }
-}
-
-@keyframes layerFloat3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  20% { transform: translate(1.5%, 1.5%) scale(1.01); }
-  40% { transform: translate(-1%, 2.5%) scale(0.98); }
-  60% { transform: translate(-2%, -1%) scale(1.02); }
-  80% { transform: translate(1%, -1.5%) scale(0.99); }
-}
-
-@keyframes layerFloat4 {
-  0%, 100% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.03) translate(-1%, 1%); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .bg-layer::before,
   .bg-layer::after {
@@ -139,128 +106,6 @@ body {
   .bg-layer::after {
     opacity: 0.8;
   }
-  .scroll-art__layer {
-    animation: none !important;
-  }
-}
-
-/* Scroll-driven abstract art (home only) */
-.scroll-art {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-  contain: layout paint;
-}
-
-.scroll-art__layer {
-  position: absolute;
-  will-change: transform;
-}
-
-/* --- Deep background layers (1-3): soft warm washes, slow drift --- */
-
-.scroll-art__layer--1 {
-  inset: -35%;
-  border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;
-  background: radial-gradient(ellipse 80% 70% at 25% 20%, rgba(var(--layer-amber-rgb), 0.22) 0%, transparent 55%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p, 0) * 45deg)) translate(calc(var(--scroll-p, 0) * 5%), calc(var(--scroll-p, 0) * -3%));
-  animation: layerFloat1 35s ease-in-out infinite;
-}
-
-.scroll-art__layer--2 {
-  inset: -40%;
-  border-radius: 55% 45% 40% 60% / 45% 55% 50% 50%;
-  background: radial-gradient(ellipse 70% 80% at 80% 70%, rgba(var(--layer-sky-rgb), 0.18) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p, 0) * -35deg)) translate(calc(var(--scroll-p-2, 0) * -4%), calc(var(--scroll-p-2, 0) * 5%));
-  animation: layerFloat2 28s ease-in-out infinite;
-}
-
-.scroll-art__layer--3 {
-  inset: -30%;
-  border-radius: 50% 50% 45% 55% / 55% 50% 50% 45%;
-  background: radial-gradient(ellipse 85% 55% at 15% 80%, rgba(var(--layer-sage-rgb), 0.16) 0%, transparent 55%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-2, 0) * 55deg)) translate(calc(var(--scroll-p, 0) * 4%), calc(var(--scroll-p, 0) * 4%));
-  animation: layerFloat3 42s ease-in-out infinite;
-}
-
-/* --- Mid-ground layers (4-6): brighter nature tones, organic shapes --- */
-
-.scroll-art__layer--4 {
-  inset: -25%;
-  border-radius: 40% 60% 55% 45% / 55% 40% 60% 50%;
-  background: radial-gradient(ellipse 65% 70% at 65% 25%, rgba(var(--layer-coral-rgb), 0.20) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p, 0) * 50deg)) translate(calc(var(--scroll-p-3, 0) * -5%), calc(var(--scroll-p-3, 0) * -3%));
-  animation: layerFloat4 22s ease-in-out infinite;
-}
-
-.scroll-art__layer--5 {
-  inset: -35%;
-  border-radius: 60% 40% 45% 55% / 50% 60% 40% 50%;
-  background: radial-gradient(ellipse 75% 60% at 80% 50%, rgba(var(--layer-lavender-rgb), 0.17) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-2, 0) * -40deg)) translate(calc(var(--scroll-p, 0) * 6%), calc(var(--scroll-p-2, 0) * -5%));
-  animation: layerFloat1 30s ease-in-out infinite reverse;
-}
-
-.scroll-art__layer--6 {
-  inset: -30%;
-  border-radius: 48% 52% 58% 42% / 42% 48% 52% 58%;
-  background: radial-gradient(ellipse 60% 75% at 20% 55%, rgba(var(--layer-peach-rgb), 0.22) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-3, 0) * 60deg)) translate(calc(var(--scroll-p-2, 0) * -3%), calc(var(--scroll-p, 0) * 6%));
-  animation: layerFloat2 38s ease-in-out infinite;
-}
-
-/* --- Foreground layers (7-9): vivid accents, faster scroll response --- */
-
-.scroll-art__layer--7 {
-  inset: -20%;
-  border-radius: 55% 45% 50% 50% / 45% 55% 45% 55%;
-  background: radial-gradient(ellipse 55% 65% at 75% 35%, rgba(var(--layer-turquoise-rgb), 0.18) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-4, 0) * -55deg)) translate(calc(var(--scroll-p, 0) * 7%), calc(var(--scroll-p-4, 0) * 4%));
-  animation: layerFloat3 25s ease-in-out infinite reverse;
-}
-
-.scroll-art__layer--8 {
-  inset: -25%;
-  border-radius: 42% 58% 52% 48% / 58% 42% 55% 45%;
-  background: radial-gradient(ellipse 70% 55% at 30% 70%, rgba(var(--layer-gold-rgb), 0.20) 0%, transparent 55%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p, 0) * 65deg)) translate(calc(var(--scroll-p-4, 0) * -6%), calc(var(--scroll-p-2, 0) * 5%));
-  animation: layerFloat4 33s ease-in-out infinite;
-}
-
-.scroll-art__layer--9 {
-  inset: -30%;
-  border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
-  background: radial-gradient(ellipse 60% 80% at 50% 40%, rgba(var(--layer-rose-rgb), 0.15) 0%, transparent 55%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-3, 0) * -45deg)) translate(calc(var(--scroll-p-4, 0) * 5%), calc(var(--scroll-p, 0) * -6%));
-  animation: layerFloat1 40s ease-in-out infinite;
-}
-
-/* --- Accent wisps (10-12): gentle, dreamy foreground touches --- */
-
-.scroll-art__layer--10 {
-  inset: -20%;
-  border-radius: 58% 42% 48% 52% / 44% 56% 48% 52%;
-  background: radial-gradient(ellipse 50% 50% at 10% 30%, rgba(var(--layer-seafoam-rgb), 0.16) 0%, transparent 45%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-4, 0) * 35deg)) translate(calc(var(--scroll-p-3, 0) * -4%), calc(var(--scroll-p, 0) * 3%));
-  animation: layerFloat2 26s ease-in-out infinite reverse;
-}
-
-.scroll-art__layer--11 {
-  inset: -25%;
-  border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
-  background: radial-gradient(ellipse 65% 45% at 90% 80%, rgba(var(--layer-terracotta-rgb), 0.14) 0%, transparent 50%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p, 0) * -30deg)) translate(calc(var(--scroll-p-4, 0) * 5%), calc(var(--scroll-p-3, 0) * -4%));
-  animation: layerFloat3 32s ease-in-out infinite;
-}
-
-.scroll-art__layer--12 {
-  inset: -35%;
-  border-radius: 52% 48% 44% 56% / 56% 52% 48% 44%;
-  background: radial-gradient(ellipse 75% 65% at 45% 15%, rgba(var(--layer-blush-rgb), 0.18) 0%, transparent 55%);
-  transform: translateZ(0) rotate(calc(var(--scroll-p-2, 0) * 50deg)) translate(calc(var(--scroll-p, 0) * -5%), calc(var(--scroll-p-4, 0) * 6%));
-  animation: layerFloat4 36s ease-in-out infinite reverse;
 }
 
 /* Nav */
@@ -363,170 +208,24 @@ body {
   font-size: 1.1rem;
 }
 
-/* Home page */
-.home-page {
-  position: relative;
+/* Tools section */
+.tools-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
 }
 
-.home-scroll-content {
-  position: relative;
-  z-index: 5;
-}
-
-.home-section {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 3rem 1.5rem;
-}
-
-.home-section--middle {
-  min-height: 80vh;
-}
-
-.home-section--hero h1 {
+.tools-section .page-header h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.25rem, 6vw, 3.25rem);
-  margin: 0 0 0.75rem;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
 }
 
-.hero-tagline {
-  margin: 0;
-  font-size: 1.25rem;
+.placeholder-message {
   color: var(--text-muted);
-}
-
-.home-section--about h2,
-.home-section--cta h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.25rem;
-  margin: 0 0 0.75rem;
-  color: var(--text);
-}
-
-.home-section--about p {
   margin: 0;
-  color: var(--text-muted);
-  max-width: 560px;
-}
-
-.home-bio {
-  max-width: 560px;
-}
-
-.home-bio p {
-  margin: 0 0 1rem;
-  color: var(--text-muted);
-}
-
-.home-bio p:last-child {
-  margin-bottom: 0;
-}
-
-.home-vibes {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.home-updates,
-.home-blog,
-.home-recent-projects {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.home-update,
-.home-blog-post,
-.home-project {
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.home-update:last-child,
-.home-blog-post:last-child,
-.home-project:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.home-update-header,
-.home-blog-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.home-update-title,
-.home-blog-title,
-.home-project-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.15rem;
-  margin: 0;
-  color: var(--text);
-}
-
-.home-update-title a,
-.home-blog-title a,
-.home-project-title a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.home-update-title a:hover,
-.home-blog-title a:hover,
-.home-project-title a:hover {
-  color: var(--accent);
-}
-
-.home-update-date,
-.home-blog-date {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.home-update-content,
-.home-blog-excerpt,
-.home-project-description {
-  margin: 0;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-.home-project-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.home-project-badge {
-  display: inline-block;
-  padding: 0.2rem 0.5rem;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 4px;
-}
-
-.cta-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .btn {
@@ -702,12 +401,6 @@ body {
 
 .share-app-dropdown .share-option:hover {
   background: var(--border);
-}
-
-/* Tools placeholder */
-.tools-page .placeholder-message {
-  color: var(--text-muted);
-  margin: 0;
 }
 
 /* Auth loading / denied */

@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
@@ -7,8 +6,6 @@ import PortfolioPage from './pages/PortfolioPage'
 import AdminPage from './pages/AdminPage'
 import RedirectResolver from './pages/RedirectResolver'
 import { RESERVED_SLUGS } from './hooks/useRedirects'
-
-const HomePage = lazy(() => import('./pages/HomePage'))
 
 function AppContent() {
   const { user, loading, signOut, isAllowed, firebaseError } = useAuth()
@@ -49,16 +46,13 @@ function AppContent() {
   }
 
   return (
-    <Suspense fallback={<div className="auth-loading"><span>Loading…</span></div>}>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="portfolio" element={<PortfolioPage />} />
-          <Route path="admin" element={<AdminPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<PortfolioPage />} />
+        <Route path="admin" element={<AdminPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   )
 }
 
