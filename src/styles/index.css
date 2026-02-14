@@ -157,8 +157,6 @@ body {
 .scroll-art__layer {
   position: absolute;
   will-change: transform;
-  backface-visibility: hidden;
-  contain: layout paint;
 }
 
 /* --- Deep background layers (1-3): soft warm washes, slow drift --- */
