@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { usePortfolio } from '../hooks/usePortfolio'
 import { useRedirects, RESERVED_SLUGS } from '../hooks/useRedirects'
+import { useHelpfulLinks } from '../hooks/useHelpfulLinks'
 
 const LOADING_SLOW_MS = 8000
 
-function ShortlinksTab({ items, loading, error, addRedirect, updateRedirect, removeRedirect }) {
+function ShortlinksTab({ items, addRedirect, updateRedirect, removeRedirect }) {
   const [slug, setSlug] = useState('')
   const [url, setUrl] = useState('')
   const [editingSlug, setEditingSlug] = useState(null)
@@ -140,7 +141,7 @@ function ShortlinksTab({ items, loading, error, addRedirect, updateRedirect, rem
   )
 }
 
-function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }) {
+function PortfolioTab({ items, addItem, updateItem, removeItem, moveItem }) {
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
@@ -212,54 +213,25 @@ function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }
         <h2 className="admin-form-title">Add app</h2>
         <label>
           Name <span className="required">*</span>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="App name"
-            required
-          />
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="App name" required />
         </label>
         <label>
           URL <span className="required">*</span>
-          <input
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://..."
-            required
-          />
+          <input type="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." required />
         </label>
         <label>
           Description
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Short description"
-          />
+          <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short description" />
         </label>
         <label>
           Tags <span className="hint">(comma-separated)</span>
-          <input
-            type="text"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="React, Vite"
-          />
+          <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="React, Vite" />
         </label>
         <label>
           Image URL
-          <input
-            type="url"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            placeholder="https://..."
-          />
+          <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://..." />
         </label>
-        <button type="submit" className="btn btn-primary">
-          Add app
-        </button>
+        <button type="submit" className="btn btn-primary">Add app</button>
       </form>
 
       <section className="admin-list">
@@ -268,53 +240,42 @@ function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }
           <p className="admin-empty">No apps yet. Add one above.</p>
         ) : (
           <ul className="admin-items">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <li key={item.id} className="admin-item">
                 {editingId === item.id ? (
                   <form className="admin-edit-form" onSubmit={saveEdit}>
-                    <input
-                      type="text"
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                      placeholder="Name"
-                      required
-                    />
-                    <input
-                      type="url"
-                      value={editUrl}
-                      onChange={(e) => setEditUrl(e.target.value)}
-                      placeholder="URL"
-                      required
-                    />
-                    <input
-                      type="text"
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      placeholder="Description"
-                    />
-                    <input
-                      type="text"
-                      value={editTags}
-                      onChange={(e) => setEditTags(e.target.value)}
-                      placeholder="Tags (comma-separated)"
-                    />
-                    <input
-                      type="url"
-                      value={editImage}
-                      onChange={(e) => setEditImage(e.target.value)}
-                      placeholder="Image URL"
-                    />
+                    <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder="Name" required />
+                    <input type="url" value={editUrl} onChange={(e) => setEditUrl(e.target.value)} placeholder="URL" required />
+                    <input type="text" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder="Description" />
+                    <input type="text" value={editTags} onChange={(e) => setEditTags(e.target.value)} placeholder="Tags (comma-separated)" />
+                    <input type="url" value={editImage} onChange={(e) => setEditImage(e.target.value)} placeholder="Image URL" />
                     <div className="admin-edit-actions">
-                      <button type="submit" className="btn btn-primary btn-sm">
-                        Save
-                      </button>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={cancelEdit}>
-                        Cancel
-                      </button>
+                      <button type="submit" className="btn btn-primary btn-sm">Save</button>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={cancelEdit}>Cancel</button>
                     </div>
                   </form>
                 ) : (
                   <>
+                    <div className="admin-reorder-buttons">
+                      <button
+                        type="button"
+                        className="btn-reorder"
+                        onClick={() => moveItem(index, -1)}
+                        disabled={index === 0}
+                        title="Move up"
+                      >
+                        &#9650;
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-reorder"
+                        onClick={() => moveItem(index, 1)}
+                        disabled={index === items.length - 1}
+                        title="Move down"
+                      >
+                        &#9660;
+                      </button>
+                    </div>
                     <div className="admin-item-info">
                       <strong>{item.title}</strong>
                       <a href={item.url} target="_blank" rel="noopener noreferrer" className="admin-item-url">
@@ -322,12 +283,163 @@ function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }
                       </a>
                     </div>
                     <div className="admin-item-actions">
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(item)}>
-                        Edit
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(item)}>Edit</button>
+                      <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </>
+  )
+}
+
+function HelpfulLinksTab({ items, addLink, updateLink, removeLink, moveLink }) {
+  const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
+  const [description, setDescription] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editUrl, setEditUrl] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+
+  function clearForm() {
+    setTitle('')
+    setUrl('')
+    setDescription('')
+    setEditingId(null)
+  }
+
+  async function handleAdd(e) {
+    e.preventDefault()
+    if (!title.trim() || !url.trim()) return
+    await addLink({
+      title: title.trim(),
+      url: url.trim(),
+      description: description.trim(),
+    })
+    clearForm()
+  }
+
+  function startEdit(item) {
+    setEditingId(item.id)
+    setEditTitle(item.title ?? '')
+    setEditUrl(item.url ?? '')
+    setEditDescription(item.description ?? '')
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+    setEditTitle('')
+    setEditUrl('')
+    setEditDescription('')
+  }
+
+  async function saveEdit(e) {
+    e.preventDefault()
+    if (!editingId || !editTitle.trim() || !editUrl.trim()) return
+    await updateLink(editingId, {
+      title: editTitle.trim(),
+      url: editUrl.trim(),
+      description: editDescription.trim(),
+    })
+    cancelEdit()
+  }
+
+  async function handleDelete(id) {
+    if (window.confirm('Remove this link?')) {
+      await removeLink(id)
+    }
+  }
+
+  return (
+    <>
+      <form className="admin-form" onSubmit={editingId ? saveEdit : handleAdd}>
+        <h2 className="admin-form-title">{editingId ? 'Edit link' : 'Add link'}</h2>
+        <label>
+          Title <span className="required">*</span>
+          <input
+            type="text"
+            value={editingId ? editTitle : title}
+            onChange={(e) => (editingId ? setEditTitle(e.target.value) : setTitle(e.target.value))}
+            placeholder="Link title"
+            required
+          />
+        </label>
+        <label>
+          URL <span className="required">*</span>
+          <input
+            type="url"
+            value={editingId ? editUrl : url}
+            onChange={(e) => (editingId ? setEditUrl(e.target.value) : setUrl(e.target.value))}
+            placeholder="https://..."
+            required
+          />
+        </label>
+        <label>
+          Description <span className="hint">(optional)</span>
+          <input
+            type="text"
+            value={editingId ? editDescription : description}
+            onChange={(e) => (editingId ? setEditDescription(e.target.value) : setDescription(e.target.value))}
+            placeholder="Short description"
+          />
+        </label>
+        <div className="admin-form-actions">
+          <button type="submit" className="btn btn-primary">
+            {editingId ? 'Save' : 'Add link'}
+          </button>
+          {editingId && (
+            <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
+              Cancel
+            </button>
+          )}
+        </div>
+      </form>
+
+      <section className="admin-list">
+        <h2 className="admin-list-title">Current links</h2>
+        {items.length === 0 ? (
+          <p className="admin-empty">No helpful links yet.</p>
+        ) : (
+          <ul className="admin-items">
+            {items.map((item, index) => (
+              <li key={item.id} className="admin-item">
+                {editingId === item.id ? null : (
+                  <>
+                    <div className="admin-reorder-buttons">
+                      <button
+                        type="button"
+                        className="btn-reorder"
+                        onClick={() => moveLink(index, -1)}
+                        disabled={index === 0}
+                        title="Move up"
+                      >
+                        &#9650;
                       </button>
-                      <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>
-                        Delete
+                      <button
+                        type="button"
+                        className="btn-reorder"
+                        onClick={() => moveLink(index, 1)}
+                        disabled={index === items.length - 1}
+                        title="Move down"
+                      >
+                        &#9660;
                       </button>
+                    </div>
+                    <div className="admin-item-info">
+                      <strong>{item.title}</strong>
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="admin-item-url">
+                        {item.url}
+                      </a>
+                      {item.description && <p>{item.description}</p>}
+                    </div>
+                    <div className="admin-item-actions">
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(item)}>Edit</button>
+                      <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</button>
                     </div>
                   </>
                 )}
@@ -341,13 +453,14 @@ function PortfolioTab({ items, loading, error, addItem, updateItem, removeItem }
 }
 
 export default function AdminPage() {
-  const { items: portfolioItems, loading: portfolioLoading, error: portfolioError, addItem, updateItem, removeItem } = usePortfolio()
+  const { items: portfolioItems, loading: portfolioLoading, error: portfolioError, addItem, updateItem, removeItem, moveItem } = usePortfolio()
   const { items: redirectItems, loading: redirectsLoading, error: redirectsError, addRedirect, updateRedirect, removeRedirect } = useRedirects()
+  const { items: linkItems, loading: linksLoading, error: linksError, addLink, updateLink, removeLink, moveLink } = useHelpfulLinks()
   const [activeTab, setActiveTab] = useState('portfolio')
   const [loadingSlow, setLoadingSlow] = useState(false)
 
-  const loading = portfolioLoading || redirectsLoading
-  const error = portfolioError || redirectsError
+  const loading = portfolioLoading || redirectsLoading || linksLoading
+  const error = portfolioError || redirectsError || linksError
 
   useEffect(() => {
     if (!loading) {
@@ -384,46 +497,31 @@ export default function AdminPage() {
     <div className="page admin-page">
       <header className="page-header">
         <h1>Admin</h1>
-        <p className="page-subtitle">Manage portfolio and shortlinks</p>
+        <p className="page-subtitle">Manage your content</p>
       </header>
 
       <div className="admin-tabs">
-        <button
-          type="button"
-          className={`admin-tab ${activeTab === 'portfolio' ? 'active' : ''}`}
-          onClick={() => setActiveTab('portfolio')}
-        >
+        <button type="button" className={`admin-tab ${activeTab === 'portfolio' ? 'active' : ''}`} onClick={() => setActiveTab('portfolio')}>
           Portfolio
         </button>
-        <button
-          type="button"
-          className={`admin-tab ${activeTab === 'shortlinks' ? 'active' : ''}`}
-          onClick={() => setActiveTab('shortlinks')}
-        >
+        <button type="button" className={`admin-tab ${activeTab === 'links' ? 'active' : ''}`} onClick={() => setActiveTab('links')}>
+          Helpful Links
+        </button>
+        <button type="button" className={`admin-tab ${activeTab === 'shortlinks' ? 'active' : ''}`} onClick={() => setActiveTab('shortlinks')}>
           Shortlinks
         </button>
       </div>
 
       {activeTab === 'portfolio' && (
-        <PortfolioTab
-          items={portfolioItems}
-          loading={portfolioLoading}
-          error={portfolioError}
-          addItem={addItem}
-          updateItem={updateItem}
-          removeItem={removeItem}
-        />
+        <PortfolioTab items={portfolioItems} addItem={addItem} updateItem={updateItem} removeItem={removeItem} moveItem={moveItem} />
+      )}
+
+      {activeTab === 'links' && (
+        <HelpfulLinksTab items={linkItems} addLink={addLink} updateLink={updateLink} removeLink={removeLink} moveLink={moveLink} />
       )}
 
       {activeTab === 'shortlinks' && (
-        <ShortlinksTab
-          items={redirectItems}
-          loading={redirectsLoading}
-          error={redirectsError}
-          addRedirect={addRedirect}
-          updateRedirect={updateRedirect}
-          removeRedirect={removeRedirect}
-        />
+        <ShortlinksTab items={redirectItems} addRedirect={addRedirect} updateRedirect={updateRedirect} removeRedirect={removeRedirect} />
       )}
     </div>
   )

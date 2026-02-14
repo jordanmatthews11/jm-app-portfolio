@@ -10,10 +10,10 @@ import {
 } from 'firebase/firestore'
 import { db, firebaseError } from '../lib/firebase'
 
-const COLLECTION = 'portfolio'
+const COLLECTION = 'helpfulLinks'
 const LOAD_TIMEOUT_MS = 10_000
 
-export function usePortfolio() {
+export function useHelpfulLinks() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(firebaseError ? new Error(firebaseError) : null)
@@ -31,11 +31,7 @@ export function usePortfolio() {
     }
     const timeoutId = setTimeout(() => {
       if (done) return
-      setError(
-        new Error(
-          "Firestore didn't respond. Create a Firestore database in Firebase Console (Build → Firestore Database → Create database), choose a region, then go to Rules and paste the rules from your project's firestore.rules file and Publish."
-        )
-      )
+      setError(new Error("Firestore didn't respond."))
       setItems([])
       finish()
     }, LOAD_TIMEOUT_MS)
@@ -68,37 +64,32 @@ export function usePortfolio() {
     }
   }, [])
 
-  async function addItem({ title, url, description = '', tags = [], image = '' }) {
+  async function addLink({ title, url, description = '' }) {
     if (!db) return
-    const ref = await addDoc(collection(db, COLLECTION), {
-      title,
-      url,
-      description: description.trim(),
-      tags: Array.isArray(tags) ? tags : (tags && String(tags).split(',').map((t) => t.trim()).filter(Boolean)) || [],
-      image: (image && image.trim()) || '',
+    await addDoc(collection(db, COLLECTION), {
+      title: title.trim(),
+      url: url.trim(),
+      description: (description || '').trim(),
       order: items.length,
       createdAt: serverTimestamp(),
     })
-    return ref.id
   }
 
-  async function updateItem(id, { title, url, description, tags, image }) {
+  async function updateLink(id, { title, url, description }) {
     if (!db) return
     const payload = {}
-    if (title !== undefined) payload.title = title
-    if (url !== undefined) payload.url = url
-    if (description !== undefined) payload.description = description
-    if (tags !== undefined) payload.tags = Array.isArray(tags) ? tags : (String(tags).split(',').map((t) => t.trim()).filter(Boolean))
-    if (image !== undefined) payload.image = image
+    if (title !== undefined) payload.title = title.trim()
+    if (url !== undefined) payload.url = url.trim()
+    if (description !== undefined) payload.description = description.trim()
     await updateDoc(doc(db, COLLECTION, id), payload)
   }
 
-  async function removeItem(id) {
+  async function removeLink(id) {
     if (!db) return
     await deleteDoc(doc(db, COLLECTION, id))
   }
 
-  async function moveItem(index, direction) {
+  async function moveLink(index, direction) {
     if (!db) return
     const targetIndex = index + direction
     if (targetIndex < 0 || targetIndex >= items.length) return
@@ -112,5 +103,5 @@ export function usePortfolio() {
     ])
   }
 
-  return { items, loading, error, addItem, updateItem, removeItem, moveItem }
+  return { items, loading, error, addLink, updateLink, removeLink, moveLink }
 }
