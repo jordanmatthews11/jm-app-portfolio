@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import {
-  collection,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  deleteDoc,
   doc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
   serverTimestamp,
 } from 'firebase/firestore'
 import { db, firebaseError } from '../lib/firebase'
 
-const COLLECTION = 'helpfulLinks'
+const DOC_PATH = 'homeContent/helpfulLinks'
 const LOAD_TIMEOUT_MS = 10_000
+
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2)
+}
 
 export function useHelpfulLinks() {
   const [items, setItems] = useState([])
@@ -36,20 +38,20 @@ export function useHelpfulLinks() {
       finish()
     }, LOAD_TIMEOUT_MS)
     const unsubscribe = onSnapshot(
-      collection(db, COLLECTION),
+      doc(db, DOC_PATH),
       (snapshot) => {
-        const docs = snapshot.docs.map((d) => {
-          const data = d.data()
-          const createdAt = data.createdAt?.toMillis?.() ?? data.createdAt?.toDate?.()?.getTime?.() ?? 0
-          return { id: d.id, ...data, createdAt }
-        })
-        docs.sort((a, b) => {
-          const orderA = typeof a.order === 'number' ? a.order : 9999
-          const orderB = typeof b.order === 'number' ? b.order : 9999
-          if (orderA !== orderB) return orderA - orderB
-          return (b.createdAt ?? 0) - (a.createdAt ?? 0)
-        })
-        setItems(docs)
+        if (snapshot.exists()) {
+          const data = snapshot.data()
+          const list = Array.isArray(data.items) ? data.items : []
+          list.sort((a, b) => {
+            const orderA = typeof a.order === 'number' ? a.order : 9999
+            const orderB = typeof b.order === 'number' ? b.order : 9999
+            return orderA - orderB
+          })
+          setItems(list)
+        } else {
+          setItems([])
+        }
         setError(null)
         finish()
       },
@@ -64,43 +66,49 @@ export function useHelpfulLinks() {
     }
   }, [])
 
-  async function addLink({ title, url, description = '' }) {
+  async function saveItems(newItems) {
     if (!db) return
-    await addDoc(collection(db, COLLECTION), {
+    const docRef = doc(db, DOC_PATH)
+    await setDoc(docRef, { items: newItems, updatedAt: serverTimestamp() }, { merge: true })
+  }
+
+  async function addLink({ title, url, description = '' }) {
+    const newItem = {
+      id: generateId(),
       title: title.trim(),
       url: url.trim(),
       description: (description || '').trim(),
       order: items.length,
-      createdAt: serverTimestamp(),
-    })
+    }
+    await saveItems([...items, newItem])
   }
 
   async function updateLink(id, { title, url, description }) {
-    if (!db) return
-    const payload = {}
-    if (title !== undefined) payload.title = title.trim()
-    if (url !== undefined) payload.url = url.trim()
-    if (description !== undefined) payload.description = description.trim()
-    await updateDoc(doc(db, COLLECTION, id), payload)
+    const updated = items.map((item) => {
+      if (item.id !== id) return item
+      const copy = { ...item }
+      if (title !== undefined) copy.title = title.trim()
+      if (url !== undefined) copy.url = url.trim()
+      if (description !== undefined) copy.description = description.trim()
+      return copy
+    })
+    await saveItems(updated)
   }
 
   async function removeLink(id) {
-    if (!db) return
-    await deleteDoc(doc(db, COLLECTION, id))
+    const filtered = items.filter((item) => item.id !== id)
+    await saveItems(filtered)
   }
 
   async function moveLink(index, direction) {
-    if (!db) return
     const targetIndex = index + direction
     if (targetIndex < 0 || targetIndex >= items.length) return
-    const itemA = items[index]
-    const itemB = items[targetIndex]
-    const orderA = typeof itemA.order === 'number' ? itemA.order : index
-    const orderB = typeof itemB.order === 'number' ? itemB.order : targetIndex
-    await Promise.all([
-      updateDoc(doc(db, COLLECTION, itemA.id), { order: orderB }),
-      updateDoc(doc(db, COLLECTION, itemB.id), { order: orderA }),
-    ])
+    const newItems = [...items]
+    const orderA = typeof newItems[index].order === 'number' ? newItems[index].order : index
+    const orderB = typeof newItems[targetIndex].order === 'number' ? newItems[targetIndex].order : targetIndex
+    newItems[index] = { ...newItems[index], order: orderB }
+    newItems[targetIndex] = { ...newItems[targetIndex], order: orderA }
+    await saveItems(newItems)
   }
 
   return { items, loading, error, addLink, updateLink, removeLink, moveLink }
