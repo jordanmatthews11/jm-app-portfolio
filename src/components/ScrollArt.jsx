@@ -18,7 +18,7 @@ function useScrollProgress(containerRef) {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight
       const raw = maxScroll <= 0 ? 0 : scrollY / maxScroll
       const p = Math.max(0, Math.min(1, raw))
-      const pRounded = Math.round(p * 100) / 100
+      const pRounded = Math.round(p * 10000) / 10000
       if (pRounded === lastPRef.current) return
       lastPRef.current = pRounded
       el.style.setProperty('--scroll-p', String(p))
