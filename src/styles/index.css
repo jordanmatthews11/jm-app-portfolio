@@ -106,29 +106,29 @@ body {
 
 /* Ambient drift animations for scroll-art layers */
 @keyframes layerFloat1 {
-  0%, 100% { translate: 0 0; scale: 1; }
-  25% { translate: 2% -1.5%; scale: 1.02; }
-  50% { translate: -1% 2%; scale: 0.99; }
-  75% { translate: 1.5% 1%; scale: 1.01; }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(2%, -1.5%) scale(1.02); }
+  50% { transform: translate(-1%, 2%) scale(0.99); }
+  75% { transform: translate(1.5%, 1%) scale(1.01); }
 }
 
 @keyframes layerFloat2 {
-  0%, 100% { translate: 0 0; rotate: 0deg; }
-  33% { translate: -1.5% 2%; rotate: 3deg; }
-  66% { translate: 2% -1%; rotate: -2deg; }
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-1.5%, 2%) rotate(3deg); }
+  66% { transform: translate(2%, -1%) rotate(-2deg); }
 }
 
 @keyframes layerFloat3 {
-  0%, 100% { translate: 0 0; scale: 1; }
-  20% { translate: 1.5% 1.5%; scale: 1.01; }
-  40% { translate: -1% 2.5%; scale: 0.98; }
-  60% { translate: -2% -1%; scale: 1.02; }
-  80% { translate: 1% -1.5%; scale: 0.99; }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20% { transform: translate(1.5%, 1.5%) scale(1.01); }
+  40% { transform: translate(-1%, 2.5%) scale(0.98); }
+  60% { transform: translate(-2%, -1%) scale(1.02); }
+  80% { transform: translate(1%, -1.5%) scale(0.99); }
 }
 
 @keyframes layerFloat4 {
-  0%, 100% { scale: 1; translate: 0 0; }
-  50% { scale: 1.03; translate: -1% 1%; }
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.03) translate(-1%, 1%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
