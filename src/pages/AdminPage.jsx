@@ -297,7 +297,15 @@ function PortfolioTab({ items, addItem, updateItem, removeItem, moveItem }) {
   )
 }
 
-function HelpfulLinksTab({ items, addLink, updateLink, removeLink, moveLink }) {
+function HelpfulLinksTab({ items, error, addLink, updateLink, removeLink, moveLink }) {
+  if (error) {
+    return (
+      <p className="admin-error">
+        Could not load helpful links: {error.message}. Make sure Firestore rules are deployed.
+      </p>
+    )
+  }
+
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
@@ -459,8 +467,8 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('portfolio')
   const [loadingSlow, setLoadingSlow] = useState(false)
 
-  const loading = portfolioLoading || redirectsLoading || linksLoading
-  const error = portfolioError || redirectsError || linksError
+  const loading = portfolioLoading || redirectsLoading
+  const linksReady = !linksLoading
 
   useEffect(() => {
     if (!loading) {
@@ -484,11 +492,12 @@ export default function AdminPage() {
     )
   }
 
-  if (error) {
+  const coreError = portfolioError || redirectsError
+  if (coreError) {
     return (
       <div className="page admin-page">
-        <p className="admin-error">Error loading: {error.message}</p>
-        {error.code && <p className="admin-error-code">Code: {error.code}</p>}
+        <p className="admin-error">Error loading: {coreError.message}</p>
+        {coreError.code && <p className="admin-error-code">Code: {coreError.code}</p>}
       </div>
     )
   }
@@ -517,7 +526,7 @@ export default function AdminPage() {
       )}
 
       {activeTab === 'links' && (
-        <HelpfulLinksTab items={linkItems} addLink={addLink} updateLink={updateLink} removeLink={removeLink} moveLink={moveLink} />
+        <HelpfulLinksTab items={linkItems} error={linksError} addLink={addLink} updateLink={updateLink} removeLink={removeLink} moveLink={moveLink} />
       )}
 
       {activeTab === 'shortlinks' && (

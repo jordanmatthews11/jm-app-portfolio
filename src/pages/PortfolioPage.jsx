@@ -5,8 +5,8 @@ import Card from '../components/Card'
 
 export default function PortfolioPage() {
   const { items, loading, error } = usePortfolio()
-  const { items: redirectItems } = useRedirects()
-  const { items: linkItems } = useHelpfulLinks()
+  const { items: redirectItems, error: redirectsError } = useRedirects()
+  const { items: linkItems, error: linksError } = useHelpfulLinks()
 
   const shortlinkBase = typeof window !== 'undefined' ? window.location.origin : 'https://jordan-matthews.com'
 
