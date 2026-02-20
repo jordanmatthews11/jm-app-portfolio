@@ -32,7 +32,7 @@ npm run preview   # preview production build
 
 ## Deploy and custom domain (jordan-matthews.com)
 
-1. **Deploy** the app to [Vercel](https://vercel.com) or [Netlify](https://netlify.com) (push the repo to GitHub, then import it). Set all `VITE_*` env vars in the host's dashboard (Project/Site settings → Environment variables). Build command: `npm run build`. Publish directory: `dist`. `vercel.json` and `netlify.toml` in this repo configure SPA routing so `/portfolio`, `/admin`, etc. work on first load.
+1. **Deploy** the app to [Vercel](https://vercel.com) or [Netlify](https://netlify.com) (push the repo to GitHub, then import it). Set all `VITE_*` env vars in the host's dashboard (Project/Site settings → Environment variables). **Required for access control:** set `VITE_ALLOWED_EMAIL` to your Google email (e.g. `you@example.com`) so only you can log in; otherwise anyone with Google can access Admin. Build command: `npm run build`. Publish directory: `dist`. `vercel.json` and `netlify.toml` in this repo configure SPA routing so `/portfolio`, `/admin`, etc. work on first load.
 2. **Firebase**: In Firebase Console → Authentication → Settings → **Authorized domains**, add your deploy hostname (e.g. `xxx.vercel.app`) and `jordan-matthews.com`.
 3. **Custom domain**: In Vercel (Project → Settings → Domains) or Netlify (Domain management), add `jordan-matthews.com` (and optionally `www`). The host will show the DNS records to add.
 4. **Squarespace DNS**: For the domain jordan-matthews.com, open DNS settings and add the A/CNAME records the host provides (e.g. root → host IP or CNAME; `www` → host CNAME). Save and wait for DNS propagation (minutes to 48 hours). The host will then issue SSL for https.

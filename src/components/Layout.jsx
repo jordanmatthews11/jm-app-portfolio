@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Nav from './Nav'
+import EasterEggTrigger from './EasterEggTrigger'
 
 export default function Layout() {
   return (
@@ -9,6 +10,7 @@ export default function Layout() {
       <main className="main">
         <Outlet />
       </main>
+      <EasterEggTrigger />
     </div>
   )
 }
