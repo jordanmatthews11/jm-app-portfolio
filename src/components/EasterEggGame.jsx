@@ -80,18 +80,23 @@ export default function EasterEggGame({ onClose, canSubmit }) {
             {items.map((item) => (
               <div
                 key={item.id}
-                className={`easter-egg-item ${item.bonus ? 'easter-egg-item-bonus' : ''}`}
+                className={`easter-egg-item easter-egg-item--${item.type}`}
                 style={{
                   transform: `translate(${item.x}px, ${item.y}px)`,
                   width: ITEM_SIZE,
                   height: ITEM_SIZE,
                 }}
-              />
+              >
+                {(item.type === 'coin' || item.type === 'dollar') && (
+                  <span className="easter-egg-item-symbol">$</span>
+                )}
+              </div>
             ))}
           </div>
           {!gameStarted && (
             <div className="easter-egg-overlay">
-              <p>Catch the falling items!</p>
+              <p>Catch gems, coins, and bills!</p>
+              <p>Don&apos;t catch the bomb.</p>
               <p>Use ← → keys or move the mouse at the bottom.</p>
               <button type="button" className="btn btn-primary" onClick={startGame}>
                 Start

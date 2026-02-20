@@ -12,8 +12,11 @@ const FALL_SPEED_LEVEL_1 = 2
 const LEVEL_SCORE_THRESHOLDS = [0, 100, 300, 600]
 const MAX_LEVEL = 4
 const MAX_MISSES = 3
-const POINTS_PER_CATCH = 10
-const BONUS_POINTS = 25
+const GEM_POINTS = 15
+const COIN_POINTS = 10
+const DOLLAR_POINTS = 25
+const BOMB_SPAWN_CHANCE = 0.06
+const ITEM_TYPES = ['gem', 'coin', 'dollar']
 
 export function useEasterEggGame() {
   const [basketX, setBasketX] = useState((PLAY_AREA_WIDTH - BASKET_WIDTH) / 2)
@@ -77,8 +80,14 @@ export function useEasterEggGame() {
               const bx = basketXRef.current
               const basketCenter = bx + BASKET_WIDTH / 2
               const itemCenter = item.x + ITEM_SIZE / 2
-              if (Math.abs(basketCenter - itemCenter) < BASKET_WIDTH / 2 + ITEM_SIZE / 2) {
-                setScore((s) => s + (item.bonus ? BONUS_POINTS : POINTS_PER_CATCH))
+              const caught = Math.abs(basketCenter - itemCenter) < BASKET_WIDTH / 2 + ITEM_SIZE / 2
+              if (caught) {
+                if (item.type === 'bomb') {
+                  setGameOver(true)
+                } else {
+                  const points = item.type === 'gem' ? GEM_POINTS : item.type === 'coin' ? COIN_POINTS : DOLLAR_POINTS
+                  setScore((s) => s + points)
+                }
                 return false
               }
               setMisses((m) => {
@@ -117,14 +126,14 @@ export function useEasterEggGame() {
     const spawnId = setInterval(() => {
       lastSpawn += interval
       lastSpawnRef.current = lastSpawn
-      const isBonus = level >= 3 && Math.random() < 0.2
+      const type = Math.random() < BOMB_SPAWN_CHANCE ? 'bomb' : ITEM_TYPES[Math.floor(Math.random() * ITEM_TYPES.length)]
       setItems((prev) => [
         ...prev,
         {
           id: `${Date.now()}-${Math.random()}`,
           x: Math.random() * (PLAY_AREA_WIDTH - ITEM_SIZE),
           y: 0,
-          bonus: isBonus,
+          type,
         },
       ])
     }, interval)
