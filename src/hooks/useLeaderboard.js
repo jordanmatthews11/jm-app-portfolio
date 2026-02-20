@@ -53,7 +53,7 @@ export function useLeaderboard() {
   }, [])
 
   async function submitScore({ score, level, playerName = '' }) {
-    if (!db) return
+    if (!db) return Promise.reject(new Error('Database not available'))
     setSubmitting(true)
     try {
       await addDoc(collection(db, COLLECTION), {

@@ -1176,6 +1176,12 @@ body {
   border-color: var(--accent);
 }
 
+.easter-egg-submit-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #c44;
+}
+
 .easter-egg-overlay .btn {
   margin: 0.25rem;
 }

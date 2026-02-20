@@ -25,11 +25,20 @@ export default function EasterEggGame({ onClose, canSubmit }) {
   const { entries, loading: leaderboardLoading, submitting, submitScore } = useLeaderboard()
   const [submitted, setSubmitted] = useState(false)
   const [playerName, setPlayerName] = useState('')
+  const [submitError, setSubmitError] = useState(null)
 
   const handleSubmit = () => {
     if (!canSubmit || submitted) return
+    setSubmitError(null)
     const name = playerName.trim() || 'Anonymous'
-    submitScore({ score, level, playerName: name }).then(() => setSubmitted(true)).catch(() => {})
+    submitScore({ score, level, playerName: name })
+      .then(() => {
+        setSubmitted(true)
+        setSubmitError(null)
+      })
+      .catch((err) => {
+        setSubmitError(err?.message || 'Failed to submit score')
+      })
   }
 
   return (
@@ -121,6 +130,9 @@ export default function EasterEggGame({ onClose, canSubmit }) {
                 >
                   {submitted ? 'Submitted!' : 'Submit score'}
                 </button>
+                {submitError && (
+                  <p className="easter-egg-submit-error">{submitError}</p>
+                )}
               </>
             )}
             <div className="easter-egg-leaderboard-preview">
