@@ -1096,24 +1096,39 @@ body {
   height: 100%;
 }
 
-.easter-egg-basket {
+.easter-egg-catcher {
   position: absolute;
-  background: var(--accent);
-  border-radius: 8px;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
+  will-change: transform;
+}
+
+.easter-egg-catcher-hand {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .easter-egg-item {
   position: absolute;
-  background: var(--border-alt);
+  left: 0;
+  top: 0;
   border-radius: 50%;
   pointer-events: none;
+  will-change: transform;
+  background: radial-gradient(circle at 30% 30%, #f4e4a6, #c9a227 40%, #8b6914);
+  border: 2px solid #b8860b;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.3);
 }
 
 .easter-egg-item-bonus {
-  background: linear-gradient(135deg, #f0c674, var(--accent));
-  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.5);
+  background: radial-gradient(circle at 30% 30%, #e8e8e8, #a8a8a8 40%, #606060);
+  border: 2px solid #808080;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4), 0 0 12px rgba(200, 200, 200, 0.5);
 }
 
 .easter-egg-overlay {
@@ -1134,6 +1149,31 @@ body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--text);
+}
+
+.easter-egg-name-label {
+  display: block;
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.easter-egg-name-input {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.easter-egg-name-input:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 .easter-egg-overlay .btn {

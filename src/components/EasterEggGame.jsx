@@ -24,10 +24,12 @@ export default function EasterEggGame({ onClose, canSubmit }) {
 
   const { entries, loading: leaderboardLoading, submitting, submitScore } = useLeaderboard()
   const [submitted, setSubmitted] = useState(false)
+  const [playerName, setPlayerName] = useState('')
 
   const handleSubmit = () => {
     if (!canSubmit || submitted) return
-    submitScore({ score, level, playerName: 'Jordan' }).then(() => setSubmitted(true)).catch(() => {})
+    const name = playerName.trim() || 'Anonymous'
+    submitScore({ score, level, playerName: name }).then(() => setSubmitted(true)).catch(() => {})
   }
 
   return (
@@ -57,21 +59,21 @@ export default function EasterEggGame({ onClose, canSubmit }) {
             }}
           >
             <div
-              className="easter-egg-basket"
+              className="easter-egg-catcher"
               style={{
-                left: basketX,
-                top: basketY,
+                transform: `translate(${basketX}px, ${basketY}px)`,
                 width: BASKET_WIDTH,
                 height: BASKET_HEIGHT,
               }}
-            />
+            >
+              <span className="easter-egg-catcher-hand" aria-hidden>👋</span>
+            </div>
             {items.map((item) => (
               <div
                 key={item.id}
                 className={`easter-egg-item ${item.bonus ? 'easter-egg-item-bonus' : ''}`}
                 style={{
-                  left: item.x,
-                  top: item.y,
+                  transform: `translate(${item.x}px, ${item.y}px)`,
                   width: ITEM_SIZE,
                   height: ITEM_SIZE,
                 }}
@@ -97,14 +99,29 @@ export default function EasterEggGame({ onClose, canSubmit }) {
               Play again
             </button>
             {canSubmit && (
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleSubmit}
-                disabled={submitting || submitted}
-              >
-                {submitted ? 'Submitted!' : 'Submit score'}
-              </button>
+              <>
+                <label htmlFor="easter-egg-name" className="easter-egg-name-label">
+                  Your name
+                </label>
+                <input
+                  id="easter-egg-name"
+                  type="text"
+                  className="easter-egg-name-input"
+                  placeholder="Anonymous"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  maxLength={30}
+                  disabled={submitted}
+                />
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleSubmit}
+                  disabled={submitting || submitted}
+                >
+                  {submitted ? 'Submitted!' : 'Submit score'}
+                </button>
+              </>
             )}
             <div className="easter-egg-leaderboard-preview">
               <h4>Top scores</h4>
