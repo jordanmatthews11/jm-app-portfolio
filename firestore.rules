@@ -18,10 +18,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isOwner();
     }
-    // Easter egg game leaderboard: public read and create (no auth required so saves always work)
+    // Easter egg game leaderboard: fully open so saves always work
     match /easterEggScores/{docId} {
-      allow read, create: if true;
-      allow update, delete: if false;
+      allow read, write: if true;
     }
     // Everything else: deny
     match /{document=**} {
