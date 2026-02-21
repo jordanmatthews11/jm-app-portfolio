@@ -22,7 +22,7 @@ export default function EasterEggGame({ onClose, canSubmit }) {
     MAX_MISSES,
   } = useEasterEggGame()
 
-  const { entries, loading: leaderboardLoading, submitting, submitScore } = useLeaderboard()
+  const { entries, loading: leaderboardLoading, error: leaderboardError, submitting, submitScore, savedLocally } = useLeaderboard()
   const [submitted, setSubmitted] = useState(false)
   const [playerName, setPlayerName] = useState('')
   const [submitError, setSubmitError] = useState(null)
@@ -133,10 +133,13 @@ export default function EasterEggGame({ onClose, canSubmit }) {
                   onClick={handleSubmit}
                   disabled={submitting || submitted}
                 >
-                  {submitted ? 'Submitted!' : 'Submit score'}
+                  {submitted ? (savedLocally ? 'Saved locally!' : 'Submitted!') : 'Submit score'}
                 </button>
                 {submitError && (
                   <p className="easter-egg-submit-error">{submitError}</p>
+                )}
+                {submitted && savedLocally && (
+                  <p className="easter-egg-submit-note">Score saved on this device (cloud unavailable).</p>
                 )}
               </>
             )}
@@ -144,6 +147,8 @@ export default function EasterEggGame({ onClose, canSubmit }) {
               <h4>Top scores</h4>
               {leaderboardLoading ? (
                 <p>Loading…</p>
+              ) : leaderboardError ? (
+                <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
               ) : (
                 <ol>
                   {entries.slice(0, 5).map((e, i) => (
@@ -161,6 +166,8 @@ export default function EasterEggGame({ onClose, canSubmit }) {
           <h4>Leaderboard</h4>
           {leaderboardLoading ? (
             <p>Loading…</p>
+          ) : leaderboardError ? (
+            <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
           ) : (
             <ol>
               {entries.map((e, i) => (

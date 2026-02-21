@@ -1180,6 +1180,12 @@ body {
   color: #c44;
 }
 
+.easter-egg-submit-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .easter-egg-overlay .btn {
   margin: 0.25rem;
 }
