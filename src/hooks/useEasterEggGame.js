@@ -14,9 +14,18 @@ const MAX_LEVEL = 4
 const MAX_MISSES = 3
 const GEM_POINTS = 15
 const COIN_POINTS = 10
-const DOLLAR_POINTS = 25
-const BOMB_SPAWN_CHANCE = 0.06
-const ITEM_TYPES = ['gem', 'coin', 'dollar']
+const BILL_POINTS = 25
+const MONEY_POINTS = 20
+function getBombSpawnChance(lvl) {
+  return 0.04 + (lvl - 1) * 0.02
+}
+function pickGoodItemType() {
+  const r = Math.random() * 100
+  if (r < 45) return 'coin'
+  if (r < 75) return 'bill'
+  if (r < 87) return 'money'
+  return 'gem'
+}
 
 export function useEasterEggGame() {
   const [basketX, setBasketX] = useState((PLAY_AREA_WIDTH - BASKET_WIDTH) / 2)
@@ -85,7 +94,7 @@ export function useEasterEggGame() {
                 if (item.type === 'bomb') {
                   setGameOver(true)
                 } else {
-                  const points = item.type === 'gem' ? GEM_POINTS : item.type === 'coin' ? COIN_POINTS : DOLLAR_POINTS
+                  const points = item.type === 'gem' ? GEM_POINTS : item.type === 'coin' ? COIN_POINTS : item.type === 'bill' ? BILL_POINTS : MONEY_POINTS
                   setScore((s) => s + points)
                 }
                 return false
@@ -126,7 +135,7 @@ export function useEasterEggGame() {
     const spawnId = setInterval(() => {
       lastSpawn += interval
       lastSpawnRef.current = lastSpawn
-      const type = Math.random() < BOMB_SPAWN_CHANCE ? 'bomb' : ITEM_TYPES[Math.floor(Math.random() * ITEM_TYPES.length)]
+      const type = Math.random() < getBombSpawnChance(level) ? 'bomb' : pickGoodItemType()
       setItems((prev) => [
         ...prev,
         {

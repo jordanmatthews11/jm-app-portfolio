@@ -80,16 +80,16 @@ export default function EasterEggGame({ onClose, canSubmit }) {
             {items.map((item) => (
               <div
                 key={item.id}
-                className={`easter-egg-item easter-egg-item--${item.type}`}
+                className="easter-egg-item"
                 style={{
                   transform: `translate(${item.x}px, ${item.y}px)`,
                   width: ITEM_SIZE,
                   height: ITEM_SIZE,
                 }}
               >
-                {(item.type === 'coin' || item.type === 'dollar') && (
-                  <span className="easter-egg-item-symbol">$</span>
-                )}
+                <span className="easter-egg-item-emoji" aria-hidden>
+                  {item.type === 'coin' ? '🪙' : item.type === 'bill' ? '💵' : item.type === 'money' ? '💰' : item.type === 'gem' ? '💎' : '💣'}
+                </span>
               </div>
             ))}
           </div>

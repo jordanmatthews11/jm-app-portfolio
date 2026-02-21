@@ -1124,65 +1124,9 @@ body {
   will-change: transform;
 }
 
-.easter-egg-item-symbol {
-  font-size: 0.85em;
-  font-weight: 700;
-  color: #2a2a2a;
+.easter-egg-item-emoji {
+  font-size: 1.4em;
   line-height: 1;
-  z-index: 1;
-}
-
-/* Gem: faceted jewel */
-.easter-egg-item--gem {
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 25%, #7dd3fc, #0ea5e9 35%, #0369a1 70%, #0c4a6e);
-  box-shadow: inset -2px -2px 6px rgba(255, 255, 255, 0.4), inset 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Coin: gold with $ */
-.easter-egg-item--coin {
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #f4e4a6, #c9a227 40%, #8b6914);
-  border: 2px solid #b8860b;
-  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.3);
-}
-
-.easter-egg-item--coin .easter-egg-item-symbol {
-  color: #5c4a0a;
-}
-
-/* Dollar bill: green rectangle */
-.easter-egg-item--dollar {
-  border-radius: 3px;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
-  border: 1px solid #166534;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.easter-egg-item--dollar .easter-egg-item-symbol {
-  color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-}
-
-/* Bomb: black with fuse */
-.easter-egg-item--bomb {
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #404040, #1a1a1a 50%, #0a0a0a);
-  border: 2px solid #000;
-  box-shadow: inset 0 -2px 6px rgba(255, 255, 255, 0.1);
-}
-
-.easter-egg-item--bomb::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 10px;
-  background: linear-gradient(to top, #f59e0b, #d97706);
-  border-radius: 1px;
-  box-shadow: 0 0 4px #fbbf24;
 }
 
 .easter-egg-overlay {
