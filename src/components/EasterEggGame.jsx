@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useEasterEggGame } from '../hooks/useEasterEggGame'
 import { useLeaderboard } from '../hooks/useLeaderboard'
+import { projectId } from '../lib/firebase'
 
 export default function EasterEggGame({ onClose, canSubmit }) {
   const {
@@ -148,7 +149,14 @@ export default function EasterEggGame({ onClose, canSubmit }) {
               {leaderboardLoading ? (
                 <p>Loading…</p>
               ) : leaderboardError ? (
-                <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
+                <div className="easter-egg-leaderboard-error">
+                  <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
+                  {projectId && (
+                    <p className="easter-egg-leaderboard-hint">
+                      App is using Firebase project: <strong>{projectId}</strong>. Rules must be deployed to this project. If it should be <strong>jm-app-portfolio</strong>, set <code>VITE_FIREBASE_PROJECT_ID</code> in your host&apos;s environment variables (e.g. Vercel) and redeploy.
+                    </p>
+                  )}
+                </div>
               ) : (
                 <ol>
                   {entries.slice(0, 5).map((e, i) => (
@@ -167,7 +175,14 @@ export default function EasterEggGame({ onClose, canSubmit }) {
           {leaderboardLoading ? (
             <p>Loading…</p>
           ) : leaderboardError ? (
-            <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
+            <div className="easter-egg-leaderboard-error">
+              <p className="easter-egg-submit-error">Leaderboard: {leaderboardError.message}</p>
+              {projectId && (
+                <p className="easter-egg-leaderboard-hint">
+                  App is using Firebase project: <strong>{projectId}</strong>. Rules must be deployed to this project. If it should be <strong>jm-app-portfolio</strong>, set <code>VITE_FIREBASE_PROJECT_ID</code> in your host&apos;s environment variables (e.g. Vercel) and redeploy.
+                </p>
+              )}
+            </div>
           ) : (
             <ol>
               {entries.map((e, i) => (

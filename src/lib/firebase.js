@@ -29,4 +29,5 @@ try {
   firebaseError = e?.message || e?.code || String(e)
 }
 
-export { auth, db, googleProvider }
+const projectId = app?.options?.projectId ?? null
+export { auth, db, googleProvider, projectId }

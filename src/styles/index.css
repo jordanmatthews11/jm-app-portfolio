@@ -1180,6 +1180,24 @@ body {
   color: #c44;
 }
 
+.easter-egg-leaderboard-error {
+  margin-top: 0.5rem;
+}
+
+.easter-egg-leaderboard-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: 280px;
+}
+
+.easter-egg-leaderboard-hint code {
+  font-size: 0.7em;
+  background: var(--surface-alt);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
 .easter-egg-submit-note {
   margin: 0.5rem 0 0;
   font-size: 0.8rem;
