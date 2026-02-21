@@ -1,16 +1,18 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  doc,
-  getDoc,
+  collection,
+  query,
+  orderBy,
+  limit,
   onSnapshot,
-  setDoc,
+  addDoc,
   serverTimestamp,
 } from 'firebase/firestore'
 import { db, firebaseError } from '../lib/firebase'
 
-const LEADERBOARD_DOC = 'homeContent/easterEggLeaderboard'
+const COLLECTION = 'easterEggScores'
 const TOP_N = 10
-const MAX_ENTRIES = 50
+const QUERY_LIMIT = 20
 const LOCAL_STORAGE_KEY = 'easterEggLeaderboardLocal'
 
 function generateId() {
@@ -44,7 +46,6 @@ function saveLocalEntry(entry) {
     playerName: entry.playerName,
     createdAt: Date.now(),
   })
-  // Keep last 20 local entries
   const trimmed = list.slice(-20)
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(trimmed))
 }
@@ -62,22 +63,28 @@ export function useLeaderboard() {
       setLoading(false)
       return
     }
-    const docRef = doc(db, 'homeContent', 'easterEggLeaderboard')
+    const q = query(
+      collection(db, COLLECTION),
+      orderBy('score', 'desc'),
+      limit(QUERY_LIMIT)
+    )
     const unsubscribe = onSnapshot(
-      docRef,
+      q,
       (snapshot) => {
-        const list = (snapshot.exists() && Array.isArray(snapshot.data().entries))
-          ? snapshot.data().entries
-          : []
-        const normalized = list
-          .map((e) => ({
-            id: e.id || generateId(),
-            score: Number(e.score) ?? 0,
-            level: Number(e.level) ?? 1,
-            playerName: String(e.playerName ?? '').trim().slice(0, 30),
-            createdAt: toMillis(e.createdAt),
-          }))
-        setFirestoreEntries(normalized)
+        const list = snapshot.docs.map((d) => ({
+          id: d.id,
+          score: Number(d.data().score) ?? 0,
+          level: Number(d.data().level) ?? 1,
+          playerName: String(d.data().playerName ?? '').trim().slice(0, 30),
+          createdAt: toMillis(d.data().createdAt),
+        }))
+        const sorted = list
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score
+            return b.createdAt - a.createdAt
+          })
+          .slice(0, TOP_N)
+        setFirestoreEntries(sorted)
         setError(null)
         setLoading(false)
       },
@@ -119,29 +126,23 @@ export function useLeaderboard() {
     const newEntry = {
       id: generateId(),
       ...payload,
-      createdAt: null,
+      createdAt: Date.now(),
     }
     if (db && !firebaseError) {
       try {
-        const docRef = doc(db, 'homeContent', 'easterEggLeaderboard')
-        const snap = await getDoc(docRef)
-        const current = (snap.exists() && Array.isArray(snap.data().entries))
-          ? snap.data().entries
-          : []
-        const combined = [
-          ...current,
-          { ...newEntry, createdAt: serverTimestamp() },
-        ]
-          .sort((a, b) => (Number(b.score) ?? 0) - (Number(a.score) ?? 0))
-          .slice(0, MAX_ENTRIES)
-        await setDoc(docRef, { entries: combined, updatedAt: serverTimestamp() }, { merge: true })
+        await addDoc(collection(db, COLLECTION), {
+          score: payload.score,
+          level: payload.level,
+          playerName: payload.playerName,
+          createdAt: serverTimestamp(),
+        })
       } catch (err) {
-        saveLocalEntry({ ...newEntry, createdAt: Date.now() })
+        saveLocalEntry(newEntry)
         setLocalEntries(loadLocalEntries())
         setSavedLocally(true)
       }
     } else {
-      saveLocalEntry({ ...newEntry, createdAt: Date.now() })
+      saveLocalEntry(newEntry)
       setLocalEntries(loadLocalEntries())
       setSavedLocally(true)
     }
