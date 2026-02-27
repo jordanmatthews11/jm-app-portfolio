@@ -151,8 +151,10 @@ export function useBlockDude() {
       }
 
       setFacing(dCol)
-      setPlayer(applyGravity(grid, { row, col: targetCol }, rows))
+      const landed = applyGravity(grid, { row, col: targetCol }, rows)
+      setPlayer(landed)
       setMoves((m) => m + 1)
+      if (getCell(landed.row, landed.col) === TILE.DOOR) setLevelComplete(true)
     },
     [player, grid, rows, getCell, levelComplete, gameComplete]
   )
