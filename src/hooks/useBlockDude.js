@@ -130,20 +130,18 @@ export function useBlockDude() {
 
       if (targetCell !== TILE.EMPTY && targetCell !== TILE.DOOR) return
 
-      if (isSolid(belowTarget)) {
-        setFacing(dCol)
-        setPlayer(applyGravity(grid, { row, col: targetCol }, rows))
-        setMoves((m) => m + 1)
-        return
-      }
-
       const frontSameRow = getCell(row, targetCol)
       const aboveFront = getCell(row - 1, targetCol)
       if (row - 1 >= 0 && aboveFront === TILE.EMPTY && isSolid(frontSameRow) && isSolid(getCell(row + 1, col))) {
         setFacing(dCol)
         setPlayer({ row: row - 1, col: targetCol })
         setMoves((m) => m + 1)
+        return
       }
+
+      setFacing(dCol)
+      setPlayer(applyGravity(grid, { row, col: targetCol }, rows))
+      setMoves((m) => m + 1)
     },
     [player, grid, rows, getCell, levelComplete, gameComplete]
   )
