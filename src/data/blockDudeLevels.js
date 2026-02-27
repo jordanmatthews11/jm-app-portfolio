@@ -68,4 +68,18 @@ export const LEVELS = [
     ],
     playerStart: { row: 2, col: 1 },
   },
+  {
+    map: [
+      'WWWWWWWWWWWWW',
+      'W           W',
+      'W   W WW WW W',
+      'W   W W W W W',
+      'W W W W W W W',
+      'W WWW W   W W',
+      'W    B     DW',
+      'F B BBB     F',
+      'FFFFFFFFFFFFF',
+    ],
+    playerStart: { row: 4, col: 3 },
+  },
 ]
