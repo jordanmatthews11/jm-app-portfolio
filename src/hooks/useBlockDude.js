@@ -20,6 +20,15 @@ function isSolid(cell) {
   return cell === TILE.WALL || cell === TILE.FLOOR || cell === TILE.BLOCK
 }
 
+function getBlockDropRow(grid, col, startRow, rows) {
+  for (let r = startRow; r < rows; r++) {
+    const cell = grid[r]?.[col]
+    const below = grid[r + 1]?.[col]
+    if (cell === TILE.EMPTY && isSolid(below)) return r
+  }
+  return -1
+}
+
 function applyGravity(grid, player, rows) {
   let { row, col } = player
   while (row + 1 < rows) {
@@ -149,14 +158,20 @@ export function useBlockDude() {
       const frontAbove = getCell(row - 1, frontCol)
 
       if (holding) {
-        if (front === TILE.EMPTY && isSolid(frontBelow)) {
-          setCell(row, frontCol, TILE.BLOCK)
-          setHolding(false)
-          setMoves((m) => m + 1)
-        } else if (row - 1 >= 0 && frontAbove === TILE.EMPTY && front === TILE.EMPTY && isSolid(frontBelow)) {
-          setCell(row - 1, frontCol, TILE.BLOCK)
-          setHolding(false)
-          setMoves((m) => m + 1)
+        if (front === TILE.EMPTY) {
+          const dropRow = getBlockDropRow(grid, frontCol, row, rows)
+          if (dropRow >= 0) {
+            setCell(dropRow, frontCol, TILE.BLOCK)
+            setHolding(false)
+            setMoves((m) => m + 1)
+          }
+        } else if (row - 1 >= 0 && frontAbove === TILE.EMPTY && front === TILE.EMPTY) {
+          const dropRow = getBlockDropRow(grid, frontCol, row - 1, rows)
+          if (dropRow >= 0) {
+            setCell(dropRow, frontCol, TILE.BLOCK)
+            setHolding(false)
+            setMoves((m) => m + 1)
+          }
         }
         return
       }
