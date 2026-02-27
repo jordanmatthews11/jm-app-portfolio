@@ -99,11 +99,13 @@ export function useEasterEggGame() {
                 }
                 return false
               }
-              setMisses((m) => {
-                const nextMiss = m + 1
-                if (nextMiss >= MAX_MISSES) setGameOver(true)
-                return nextMiss
-              })
+              if (item.type !== 'bomb') {
+                setMisses((m) => {
+                  const nextMiss = m + 1
+                  if (nextMiss >= MAX_MISSES) setGameOver(true)
+                  return nextMiss
+                })
+              }
               return false
             }
             return true
