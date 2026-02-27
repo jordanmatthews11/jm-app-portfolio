@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { usePortfolio } from '../hooks/usePortfolio'
 import { useRedirects, RESERVED_SLUGS } from '../hooks/useRedirects'
 import { useHelpfulLinks } from '../hooks/useHelpfulLinks'
+import BlockDudeLevelEditor from '../components/BlockDudeLevelEditor'
 
 const LOADING_SLOW_MS = 8000
 
@@ -519,6 +520,9 @@ export default function AdminPage() {
         <button type="button" className={`admin-tab ${activeTab === 'shortlinks' ? 'active' : ''}`} onClick={() => setActiveTab('shortlinks')}>
           Shortlinks
         </button>
+        <button type="button" className={`admin-tab ${activeTab === 'blockdude' ? 'active' : ''}`} onClick={() => setActiveTab('blockdude')}>
+          Block Dude
+        </button>
       </div>
 
       {activeTab === 'portfolio' && (
@@ -532,6 +536,8 @@ export default function AdminPage() {
       {activeTab === 'shortlinks' && (
         <ShortlinksTab items={redirectItems} addRedirect={addRedirect} updateRedirect={updateRedirect} removeRedirect={removeRedirect} />
       )}
+
+      {activeTab === 'blockdude' && <BlockDudeLevelEditor />}
     </div>
   )
 }
