@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import Nav from './Nav'
 import EasterEggTrigger from './EasterEggTrigger'
+import BlockDudeTrigger from './BlockDudeTrigger'
 
 export default function Layout() {
   return (
@@ -10,6 +11,7 @@ export default function Layout() {
       <main className="main">
         <Outlet />
       </main>
+      <BlockDudeTrigger />
       <EasterEggTrigger />
     </div>
   )
