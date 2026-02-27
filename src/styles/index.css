@@ -1403,6 +1403,12 @@ body {
   margin: 0 0 0.75rem;
 }
 
+.block-dude-intro-controls {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
 .block-dude-intro .btn {
   margin: 0;
 }

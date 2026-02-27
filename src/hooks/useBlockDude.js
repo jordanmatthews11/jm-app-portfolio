@@ -204,6 +204,26 @@ export function useBlockDude() {
     [player, grid, rows, getCell, setCell, holding, levelComplete, gameComplete]
   )
 
+  const tryJump = useCallback(() => {
+    if (levelComplete || gameComplete) return
+    const { row, col } = player
+    const targetRow = row - 1
+    const targetCol = col + facing
+    if (targetRow < 0) return
+    const targetCell = getCell(targetRow, targetCol)
+    if (targetCell === TILE.DOOR) {
+      setPlayer({ row: targetRow, col: targetCol })
+      setMoves((m) => m + 1)
+      setLevelComplete(true)
+      return
+    }
+    if (targetCell !== TILE.EMPTY) return
+    const below = getCell(row + 1, col)
+    if (!canLandOn(below)) return
+    setPlayer(applyGravity(grid, { row: targetRow, col: targetCol }, rows))
+    setMoves((m) => m + 1)
+  }, [player, grid, rows, getCell, facing, levelComplete, gameComplete])
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
@@ -216,6 +236,10 @@ export function useBlockDude() {
       }
       if (e.key === 'ArrowUp') {
         e.preventDefault()
+        tryJump()
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
         tryPickupOrPlace(facing)
       }
       if (e.key === 'r' || e.key === 'R') {
@@ -225,7 +249,7 @@ export function useBlockDude() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [tryMove, tryPickupOrPlace, resetLevel, facing])
+  }, [tryMove, tryPickupOrPlace, tryJump, resetLevel, facing])
 
   const startGame = useCallback(() => {
     setStarted(true)

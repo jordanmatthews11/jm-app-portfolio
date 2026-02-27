@@ -94,12 +94,13 @@ export default function BlockDudeGame({ onClose }) {
           <div className="block-dude-intro">
             <p className="block-dude-intro-title">Block Dude</p>
             <p className="block-dude-intro-desc">Move blocks to reach the door.</p>
+            <p className="block-dude-intro-controls">← → move, ↑ jump, ↓ pick up / put down, R reset</p>
             <button type="button" className="btn btn-primary" onClick={startGame}>
               Start
             </button>
           </div>
         ) : (
-          <p className="block-dude-controls-hint">← → move · ↑ pick/place · R reset</p>
+          <p className="block-dude-controls-hint">← → move · ↑ jump · ↓ pick/place · R reset</p>
         )}
       </div>
     </div>
