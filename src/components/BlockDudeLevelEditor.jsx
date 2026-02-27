@@ -10,6 +10,15 @@ const TILES = [
   { id: 'P', label: 'Player', char: 'P' },
 ]
 
+const TILE_DEFINITIONS = [
+  { char: 'W', name: 'Wall', desc: 'Solid barrier. The player and blocks cannot pass through walls.' },
+  { char: ' ', name: 'Empty', desc: 'Open air. The player and blocks can fall through empty space (gravity).' },
+  { char: 'F', name: 'Floor', desc: 'Solid platform. The player can walk and stand on floors; blocks can rest on them.' },
+  { char: 'B', name: 'Block', desc: 'Movable crate. The player can pick up and put down blocks to build stairs and cross gaps.' },
+  { char: 'D', name: 'Door', desc: 'Exit. Reaching the door completes the level. Use exactly one door per level.' },
+  { char: 'P', name: 'Player start', desc: 'Where the player character begins the level. Use exactly one P per level.' },
+]
+
 const MIN_ROWS = 6
 const MAX_ROWS = 20
 const MIN_COLS = 8
@@ -134,6 +143,17 @@ ${level.map.map((row) => `      '${row.replace(/'/g, "\\'")}',`).join('\n')}
         <p className="admin-empty" style={{ marginBottom: '1rem' }}>
           Design levels for the Block Dude game. Edit a level or add a new one, then copy the exported code into <code>src/data/blockDudeLevels.js</code>.
         </p>
+        <details className="block-dude-definitions">
+          <summary>What each tile is</summary>
+          <dl className="block-dude-definitions-list">
+            {TILE_DEFINITIONS.map((t) => (
+              <div key={t.char === ' ' ? 'space' : t.char} className="block-dude-definition">
+                <dt><span className={`block-dude-def-char block-dude-def-char--${t.char === ' ' ? 'empty' : t.char}`}>{t.char === ' ' ? '·' : t.char}</span> {t.name}</dt>
+                <dd>{t.desc}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
         <div className="admin-form-actions" style={{ marginBottom: '1.5rem' }}>
           <button type="button" className="btn btn-primary" onClick={startNew}>
             Add level
@@ -163,6 +183,18 @@ ${level.map.map((row) => `      '${row.replace(/'/g, "\\'")}',`).join('\n')}
   return (
     <section className="admin-home-section block-dude-editor-section">
       <h2 className="admin-section-title">{editingIndex !== null ? `Edit level ${editingIndex + 1}` : 'New level'}</h2>
+
+      <details className="block-dude-definitions block-dude-definitions-inline">
+        <summary>What each tile is</summary>
+        <dl className="block-dude-definitions-list">
+          {TILE_DEFINITIONS.map((t) => (
+            <div key={t.char === ' ' ? 'space' : t.char} className="block-dude-definition">
+              <dt><span className={`block-dude-def-char block-dude-def-char--${t.char === ' ' ? 'empty' : t.char}`}>{t.char === ' ' ? '·' : t.char}</span> {t.name}</dt>
+              <dd>{t.desc}</dd>
+            </div>
+          ))}
+        </dl>
+      </details>
 
       <div className="block-dude-editor-toolbar">
         <div className="block-dude-editor-palette">

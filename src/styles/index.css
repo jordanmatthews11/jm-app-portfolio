@@ -1562,3 +1562,68 @@ body {
   gap: 0.75rem;
   flex-wrap: wrap;
 }
+
+.block-dude-definitions {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.block-dude-definitions summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.block-dude-definitions-list {
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.block-dude-definition {
+  margin-bottom: 0.5rem;
+}
+
+.block-dude-definition:last-child {
+  margin-bottom: 0;
+}
+
+.block-dude-definition dt {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.block-dude-definition dd {
+  margin: 0 0 0 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.block-dude-def-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+.block-dude-def-char--W { background: #555; color: #fff; }
+.block-dude-def-char--empty { background: #87ceeb; color: #333; }
+.block-dude-def-char--F { background: #8b7355; color: #fff; }
+.block-dude-def-char--B { background: #c9a227; color: #333; }
+.block-dude-def-char--D { background: #2d5016; color: #fff; }
+.block-dude-def-char--P { background: #4a90d9; color: #fff; }
+
+.block-dude-definitions-inline {
+  margin-bottom: 1rem;
+}
