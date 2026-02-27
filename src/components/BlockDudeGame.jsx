@@ -69,16 +69,6 @@ export default function BlockDudeGame({ onClose }) {
               <span className="block-dude-player-emoji" aria-hidden>🧍</span>
             </div>
           </div>
-          {!started && (
-            <div className="block-dude-overlay">
-              <p>Block Dude</p>
-              <p>Move blocks to reach the door.</p>
-              <p>← → move, ↑ pick up / put down, R reset</p>
-              <button type="button" className="btn btn-primary" onClick={startGame}>
-                Start
-              </button>
-            </div>
-          )}
           {started && levelComplete && !gameComplete && (
             <div className="block-dude-overlay">
               <p>Level complete!</p>
@@ -100,7 +90,17 @@ export default function BlockDudeGame({ onClose }) {
             </div>
           )}
         </div>
-        <p className="block-dude-controls-hint">← → move · ↑ pick/place · R reset</p>
+        {!started ? (
+          <div className="block-dude-intro">
+            <p className="block-dude-intro-title">Block Dude</p>
+            <p className="block-dude-intro-desc">Move blocks to reach the door.</p>
+            <button type="button" className="btn btn-primary" onClick={startGame}>
+              Start
+            </button>
+          </div>
+        ) : (
+          <p className="block-dude-controls-hint">← → move · ↑ pick/place · R reset</p>
+        )}
       </div>
     </div>
   )
