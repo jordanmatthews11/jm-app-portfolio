@@ -29,11 +29,15 @@ function getBlockDropRow(grid, col, startRow, rows) {
   return -1
 }
 
+function canLandOn(cell) {
+  return cell === TILE.WALL || cell === TILE.FLOOR || cell === TILE.BLOCK || cell === TILE.DOOR
+}
+
 function applyGravity(grid, player, rows) {
   let { row, col } = player
   while (row + 1 < rows) {
     const below = grid[row + 1]?.[col]
-    if (below === TILE.WALL || below === TILE.FLOOR || below === TILE.BLOCK) break
+    if (canLandOn(below)) break
     row += 1
   }
   return { row, col }
@@ -95,6 +99,13 @@ export function useBlockDude() {
   useEffect(() => {
     loadLevel(0)
   }, [loadLevel])
+
+  useEffect(() => {
+    if (!started || levelComplete || gameComplete) return
+    if (grid[player.row]?.[player.col] === TILE.DOOR) {
+      setLevelComplete(true)
+    }
+  }, [player, grid, started, levelComplete, gameComplete])
 
   const getCell = useCallback(
     (r, c) => {
