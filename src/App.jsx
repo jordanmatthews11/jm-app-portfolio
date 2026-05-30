@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
 import PortfolioPage from './pages/PortfolioPage'
 import AdminPage from './pages/AdminPage'
+import ResumeView from './pages/ResumeView'
 import RedirectResolver from './pages/RedirectResolver'
 import { RESERVED_SLUGS } from './hooks/useRedirects'
 
@@ -50,6 +51,7 @@ function AppContent() {
       <Route path="/" element={<Layout />}>
         <Route index element={<PortfolioPage />} />
         <Route path="admin" element={<AdminPage />} />
+        <Route path="resume" element={<ResumeView />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
@@ -59,6 +61,7 @@ function AppContent() {
 function AppRouter() {
   const location = useLocation()
   const pathname = location.pathname
+
   const segments = pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
   const isOneSegment = segments.length === 1
   const slug = segments[0]

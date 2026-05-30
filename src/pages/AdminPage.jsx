@@ -3,6 +3,7 @@ import { usePortfolio } from '../hooks/usePortfolio'
 import { useRedirects, RESERVED_SLUGS } from '../hooks/useRedirects'
 import { useHelpfulLinks } from '../hooks/useHelpfulLinks'
 import BlockDudeLevelEditor from '../components/BlockDudeLevelEditor'
+import ResumeBuilder from '../components/resume/ResumeBuilder'
 
 const LOADING_SLOW_MS = 8000
 
@@ -520,6 +521,9 @@ export default function AdminPage() {
         <button type="button" className={`admin-tab ${activeTab === 'shortlinks' ? 'active' : ''}`} onClick={() => setActiveTab('shortlinks')}>
           Shortlinks
         </button>
+        <button type="button" className={`admin-tab ${activeTab === 'resume' ? 'active' : ''}`} onClick={() => setActiveTab('resume')}>
+          Resume
+        </button>
         <button type="button" className={`admin-tab ${activeTab === 'blockdude' ? 'active' : ''}`} onClick={() => setActiveTab('blockdude')}>
           Block Dude
         </button>
@@ -536,6 +540,8 @@ export default function AdminPage() {
       {activeTab === 'shortlinks' && (
         <ShortlinksTab items={redirectItems} addRedirect={addRedirect} updateRedirect={updateRedirect} removeRedirect={removeRedirect} />
       )}
+
+      {activeTab === 'resume' && <ResumeBuilder />}
 
       {activeTab === 'blockdude' && <BlockDudeLevelEditor />}
     </div>

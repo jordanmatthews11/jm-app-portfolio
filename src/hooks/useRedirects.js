@@ -13,7 +13,7 @@ import { db, firebaseError } from '../lib/firebase'
 const COLLECTION = 'redirects'
 const LOAD_TIMEOUT_MS = 10_000
 
-export const RESERVED_SLUGS = ['portfolio', 'tools', 'admin', 'go']
+export const RESERVED_SLUGS = ['portfolio', 'tools', 'admin', 'go', 'resume']
 
 export function useRedirects() {
   const [items, setItems] = useState([])

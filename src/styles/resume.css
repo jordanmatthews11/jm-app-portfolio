@@ -1,0 +1,380 @@
+/* ============================================================
+   Resume builder (Admin) + resume "paper" (shared) + /resume view
+   ============================================================ */
+
+/* --- Builder layout --- */
+.resume-builder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.resume-builder-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.resume-save-status {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+.resume-fieldset {
+  max-width: none;
+}
+
+.resume-field-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.resume-field-row label {
+  flex: 1 1 8rem;
+}
+
+.resume-section-title-field input {
+  font-weight: 600;
+}
+
+/* Links editor */
+.resume-links {
+  margin-top: 0.5rem;
+}
+
+.resume-links-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.resume-link-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.resume-link-row input {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+
+/* Item cards (experience / education / project) */
+.resume-item-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+  background: var(--surface-alt);
+}
+
+.resume-item-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.resume-item-controls .admin-reorder-buttons {
+  flex-direction: row;
+  margin-right: 0;
+}
+
+/* --- Preview pane in builder --- */
+.resume-builder-preview {
+  position: sticky;
+  top: 5rem;
+}
+
+.resume-preview-scroll {
+  max-height: calc(100vh - 7rem);
+  overflow: auto;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .resume-builder {
+    grid-template-columns: 1fr;
+  }
+  .resume-builder-preview {
+    position: static;
+    order: -1;
+  }
+  .resume-preview-scroll {
+    max-height: 60vh;
+  }
+}
+
+/* --- /resume view page --- */
+.resume-view {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.resume-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.resume-toolbar-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   The resume "paper" — used in builder preview, /resume, and print
+   ============================================================ */
+.resume-paper {
+  --resume-accent: #6b8a5e;
+  background: #ffffff;
+  color: #1b1b1b;
+  width: 100%;
+  max-width: 816px; /* ~US Letter at 96dpi */
+  margin: 0 auto;
+  padding: 48px 56px;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(43, 58, 42, 0.1);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.resume-paper--a4 {
+  max-width: 794px; /* ~A4 at 96dpi */
+}
+
+.resume-head {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  border-bottom: 2px solid var(--resume-accent);
+  padding-bottom: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.resume-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.resume-name {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  line-height: 1.05;
+  margin: 0;
+  color: #161616;
+  letter-spacing: -0.01em;
+}
+
+.resume-headline {
+  margin: 0.2rem 0 0;
+  color: var(--resume-accent);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.resume-contact {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #555;
+}
+
+.resume-contact li:not(:last-child)::after {
+  content: '·';
+  margin: 0 0.6rem;
+  color: #bbb;
+}
+
+.resume-contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume-contact a:hover {
+  text-decoration: underline;
+}
+
+.resume-section {
+  margin-top: 1.15rem;
+}
+
+.resume-section-title {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--resume-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.55rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.resume-summary {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.resume-entry {
+  margin-bottom: 0.85rem;
+}
+
+.resume-entry:last-child {
+  margin-bottom: 0;
+}
+
+.resume-entry-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.resume-entry-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #1b1b1b;
+}
+
+.resume-entry-dates {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resume-entry-sub {
+  font-size: 0.85rem;
+  color: var(--resume-accent);
+  font-weight: 500;
+  margin-top: 0.05rem;
+}
+
+.resume-entry-notes {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.resume-entry-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--resume-accent);
+  text-decoration: none;
+  margin-top: 0.1rem;
+}
+
+.resume-bullets {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.resume-bullets li {
+  font-size: 0.86rem;
+  color: #333;
+  margin-bottom: 0.15rem;
+}
+
+.resume-skills {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #333;
+}
+
+/* Narrow screens — shrink the paper so it fits a phone */
+@media (max-width: 520px) {
+  .resume-paper {
+    padding: 28px 22px;
+    font-size: 12.5px;
+  }
+  .resume-name {
+    font-size: 1.55rem;
+  }
+  .resume-entry-head {
+    flex-direction: column;
+    gap: 0;
+  }
+  .resume-entry-dates {
+    white-space: normal;
+  }
+}
+
+/* ============================================================
+   Print — show only the resume paper
+   ============================================================ */
+@media print {
+  .nav,
+  .site-footer,
+  .block-dude-trigger,
+  .easter-egg-trigger,
+  .resume-toolbar,
+  .bg-layer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .resume-view {
+    max-width: none;
+    margin: 0;
+  }
+
+  .resume-paper {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .resume-section,
+  .resume-entry {
+    break-inside: avoid;
+  }
+
+  @page {
+    margin: 0.5in;
+  }
+}

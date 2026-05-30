@@ -11,6 +11,14 @@ export default function Nav() {
       <ul className="nav-links">
         <li>
           <NavLink
+            to="/resume"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
+            Resume
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/admin"
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
