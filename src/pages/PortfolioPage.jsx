@@ -12,9 +12,19 @@ export default function PortfolioPage() {
 
   return (
     <div className="page portfolio-page">
-      <header className="page-header">
-        <h1>Vibe-coded apps and experiments</h1>
-      </header>
+      <section className="hero">
+        <div className="hero-text">
+          <h1 className="hero-title">Vibe-coded apps<br />and experiments</h1>
+          <span className="hero-divider" aria-hidden="true" />
+          <p className="hero-subtitle">
+            A collection of apps, tools and ideas<br />
+            built to solve real problems and spark curiosity.
+          </p>
+        </div>
+        <div className="hero-art" aria-hidden="true">
+          <img src="/hero-art.jpg" alt="" loading="eager" />
+        </div>
+      </section>
       {loading && <p className="portfolio-loading">Loading…</p>}
       {error && <p className="portfolio-error">Could not load portfolio. Try again later.</p>}
       {!loading && !error && items.length === 0 && (
